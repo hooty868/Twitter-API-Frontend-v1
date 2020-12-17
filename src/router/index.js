@@ -32,6 +32,8 @@ const routes = [
     path: '/main',
     name: 'setting',
     component: Main
+  },
+  {
     path: '/admin/signin',
     name: 'admin-signin',
     component: AdminSignIn
