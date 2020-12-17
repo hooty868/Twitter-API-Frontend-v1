@@ -141,48 +141,6 @@
 
           <div class="tweet-delete">x</div>
         </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
       </div>
     </main>
   </div>
