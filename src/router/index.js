@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import SignIn from '../views/SignIn.vue'
 import Main from '../views/main.vue'
-import AdminSignIn from './../views/AdminSignIn'
+import AdminSignIn from './../views/AdminSignIn.vue'
 
 Vue.use(VueRouter)
 

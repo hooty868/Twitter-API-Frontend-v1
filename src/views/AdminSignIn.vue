@@ -2,12 +2,10 @@
 <template>
   <div class="container py-5 w-100">
     <form class="w-100">
-      <img alt="logo" src="../assets/logo.png" />
-
+      <img class="logo" alt="logo" src="/image/Logo.png" />
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>
       </div>
-
       <div class="form-label-group mb-2">
         <input
           id="email"
@@ -19,7 +17,6 @@
           autofocus
         />
       </div>
-
       <div class="form-label-group mb-3">
         <input
           id="password"

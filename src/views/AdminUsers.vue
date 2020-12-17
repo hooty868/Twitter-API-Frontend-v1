@@ -2,7 +2,7 @@
   <div id="main-app">
     <nav class="d-flex flex-column justify-content-between align-items-center">
       <div class="top-items">
-        <img class="logo" src="../assets/logo.png" />
+        <img class="logo" src="/image/Logo.png" />
         <a href="#" class="text-center">推文清單</a>
         <a href="#" class="text-center">使用者列表</a>
       </div>
