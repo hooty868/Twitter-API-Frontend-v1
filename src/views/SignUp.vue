@@ -1,79 +1,107 @@
 <template>
-  <div class="container py-5">
-    <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div class="text-center mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+  <div class="container">
+    <form class="form-group w-100">
+      <div class="logo-container text-center">
+        <img class="logo" src="/image/Logo.png" alt="Logo" />
       </div>
-
-      <div class="form-label-group mb-2">
-        <label for="name">Name</label>
+      <div class="brand-container text-center">
+        <h1 class="brand h3">建立你的帳號</h1>
+      </div>
+      <div class="form-label-group">
+        <label for="account">帳號</label>
+        <input
+          id="account"
+          name="account"
+          v-model="account"
+          type="account"
+          class="form-input form-control"
+          placeholder=""
+          autocomplete="account"
+          required
+          autofocus
+        />
+      </div>
+      <div class="form-label-group">
+        <label for="name">名稱</label>
         <input
           id="name"
           name="name"
           v-model="name"
           type="text"
-          class="form-control"
-          placeholder="name"
+          class="form-input form-control"
+          placeholder=""
           autocomplete="username"
           required
           autofocus
         />
       </div>
 
-      <div class="form-label-group mb-2">
+      <div class="form-label-group">
         <label for="email">Email</label>
         <input
           id="email"
           name="email"
           v-model="email"
           type="email"
-          class="form-control"
-          placeholder="email"
+          class="form-input form-control"
+          placeholder=""
           autocomplete="email"
           required
         />
       </div>
 
-      <div class="form-label-group mb-3">
-        <label for="password">Password</label>
+      <div class="form-label-group">
+        <label for="password">密碼</label>
         <input
           id="password"
           name="password"
           v-model="password"
           type="password"
-          class="form-control"
-          placeholder="Password"
+          class="form-input form-control"
+          placeholder=""
           autocomplete="new-password"
           required
         />
       </div>
 
-      <div class="form-label-group mb-3">
-        <label for="password-check">Password Check</label>
+      <div class="form-label-group">
+        <label for="password-check">密碼確認</label>
         <input
           id="password-check"
           name="passwordCheck"
           v-model="passwordCheck"
           type="password"
-          class="form-control"
-          placeholder="Password"
+          class="form-input form-control"
+          placeholder=""
           autocomplete="new-password"
           required
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
+      <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
         Submit
       </button>
 
       <div class="text-center mb-3">
         <p>
-          <router-link to="/signin"> Sign In </router-link>
+          <router-link to="/signin">取消</router-link>
         </p>
       </div>
-
-      <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
     </form>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      account: "",
+      name: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
+    };
+  },
+};
+</script>
 

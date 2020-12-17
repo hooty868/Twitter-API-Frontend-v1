@@ -1,6 +1,6 @@
 <template>
   <div id="User-Profile">
-    <main role="main" class="mt-5 bg-white">
+    <main role="main" class="bg-white">
       <router-view />
     </main>
   </div>

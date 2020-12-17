@@ -1,54 +1,141 @@
 <template>
   <div class="container py-5">
-    <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <div class="text-center mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+    <form class="form-group w-100">
+      <div class="logo-container text-center">
+        <img class="logo" src="/image/Logo.png" alt="Logo" />
       </div>
-
-      <div class="form-label-group mb-2">
-        <label for="email">email</label>
+      <div class="brand-container text-center">
+        <h1 class="brand h3">登入 Alphitter</h1>
+      </div>
+      <div class="form-label-group">
+        <label for="account">帳號</label>
         <input
-          id="email"
-          v-model="email"
-          name="email"
-          type="email"
-          class="form-control"
-          placeholder="email"
-          autocomplete="username"
+          id="account"
+          v-model="account"
+          name="account"
+          type="account"
+          class="form-input form-control"
+          autocomplete="account"
           required
           autofocus
         />
       </div>
 
-      <div class="form-label-group mb-3">
-        <label for="password">Password</label>
+      <div class="form-label-group">
+        <label for="password">密碼</label>
         <input
           id="password"
           v-model="password"
           name="password"
           type="password"
-          class="form-control"
-          placeholder="Password"
+          class="form-input form-control"
           autocomplete="current-password"
           required
         />
       </div>
 
       <button
-        class="btn btn-lg btn-primary btn-block mb-3"
+        class="btn-submit btn btn-lg btn-block mb-3"
         type="submit"
         :disabled="isProcessing"
       >
-        Submit
+        登入
       </button>
 
-      <div class="text-center mb-3">
+      <div class="text-right d-flex justify-content-end mb-3">
         <p>
-          <router-link to="/signup">Sign Up</router-link>
+          <router-link to="/signup">註冊 Alphitter·</router-link>
+        </p>
+        <p>
+          <router-link to="/signup">後台登入</router-link>
         </p>
       </div>
-
-      <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
     </form>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      account: "",
+      email: "",
+      password: "",
+      isProcessing: false,
+    };
+  },
+};
+</script>
+
+<style>
+.form-group {
+  max-width: 540px;
+  margin: 0 auto 0 auto;
+}
+.container {
+  max-width: 1440px;
+  height: 1200px;
+  margin: 60px auto 30px auto;
+}
+.logo-container {
+  margin-bottom: 35px;
+}
+.logo {
+  max-height: 50px;
+  max-width: 50px;
+}
+.brand-container {
+  margin-bottom: 20px;
+}
+.brand {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 33px;
+}
+.form-label-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+.form-label-group::after {
+  content: "";
+  width: 99%;
+  height: 2px;
+  background: #657786;
+  border-radius: 0px 0px 4px 4px;
+  position: absolute;
+  left: 0.5%;
+}
+.form-label-group label {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 15px;
+  color: #657786;
+}
+.form-input {
+  border: none;
+  background: #f5f8fa;
+  border-radius: 4px;
+  width: 540px;
+  height: 50px;
+}
+.btn-submit {
+  width: 540px;
+  height: 50px;
+  background: #ff6600;
+  border-radius: 50px;
+  color: #fff;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 26px;
+  margin-top: 30px;
+}
+</style>
