@@ -43,7 +43,7 @@
               <p class="account">{{ user.account }}</p>
               <div class="user-detail">
                 <div class="d-flex align-items-center mr-2">
-                  <img class="profile_icon" src="/image/like.png" alt="" />
+                  <img class="profile_icon" src="/image/like_icon.png" alt="" />
                   <p>{{ user.LikedCount }}</p>
                 </div>
                 <div class="d-flex align-items-center mr-2">

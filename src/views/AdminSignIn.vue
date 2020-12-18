@@ -1,8 +1,8 @@
 // ./src/views/SignIn.vue
 <template>
   <div class="container py-5 w-100">
-    <form class="w-100">
-      <img alt="logo" src="" />
+    <form class="w-100" @submit.prevent.stop="handleSubmit">
+      <img alt="logo" src="/image/Logo.png" />
 
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>
@@ -10,6 +10,7 @@
 
       <div class="form-label-group mb-2">
         <input
+          v-model="account"
           id="email"
           name="email"
           type="email"
@@ -22,6 +23,7 @@
 
       <div class="form-label-group mb-3">
         <input
+          v-model="password"
           id="password"
           name="password"
           type="password"
@@ -34,10 +36,33 @@
       <button class="mb-3" type="submit">登入</button>
     </form>
     <div class="link">
-      <a href="#">前台登入</a>
+      <router-link to="/signin"> 前台登入 </router-link>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      account: "",
+      password: "",
+    };
+  },
+  methods: {
+    handleSubmit() {
+      const data = JSON.stringify({
+        account: this.account,
+        password: this.password,
+      });
+
+      // TODO: 向後端驗證使用者登入資訊是否合法
+      console.log("data", data);
+      this.$router.push("/admin/users");
+    },
+  },
+};
+</script>
 
 <style scoped>
 img {
@@ -56,7 +81,7 @@ input {
   background: #f5f8fa;
   display: block;
   border: none;
-  border-bottom: 1px solid #657786;
+  border-bottom: 2px solid #657786;
   width: 540px;
   height: 50px;
 }
@@ -86,5 +111,10 @@ button {
   margin: auto;
   text-align: end;
   font-weight: bold;
+}
+.link a {
+  text-decoration: none;
+
+  border-bottom: 1px solid #0099ff;
 }
 </style>
