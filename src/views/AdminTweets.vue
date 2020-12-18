@@ -2,12 +2,31 @@
   <div id="main-app">
     <nav class="d-flex flex-column justify-content-between align-items-center">
       <div class="top-items">
-        <img class="logo" src="../assets/logo.png" />
-        <a href="#" class="text-center">推文清單</a>
-        <a href="#" class="text-center">使用者列表</a>
+        <div class="logo-container">
+          <img class="logo" src="/image/Logo.png" alt="Logo" />
+        </div>
+        <div class="pannel-icon-container chosen d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/icon_index_orange.png"
+            alt="Index"
+          />
+          <h1 class="pannel-icon-text chosen">推文清單</h1>
+        </div>
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/icon_profile.png"
+            alt="Profile"
+          />
+          <h1 class="pannel-icon-text">使用者列表</h1>
+        </div>
       </div>
       <div>
-        <a href="#" class="text-center">登出</a>
+        <div class="d-flex align-items-center">
+          <img class="pannel-icon m-3" src="/image/logout@2x.png" alt="Index" />
+          <a href="#" class="text-center text-dark">登出</a>
+        </div>
       </div>
     </nav>
     <main id="main-content">
@@ -15,127 +34,18 @@
         <h4>推文清單</h4>
       </div>
       <div class="card-wrapper">
-        <div class="card">
+        <div class="card" v-for="tweet in tweets" :key="tweet.id">
           <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
+            <img class="user-avatar" :src="tweet.User.cover" alt="" />
           </div>
           <div class="content">
             <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
+              <div class="name mr-1">{{ tweet.User.name }}</div>
+              <div class="account mr-1">{{ tweet.User.account }}</div>
+              <div class="creat-time">{{ tweet.createdAt }}</div>
             </div>
             <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
-            </div>
-          </div>
-
-          <div class="tweet-delete">x</div>
-        </div>
-        <div class="card">
-          <div class="user-avatar">
-            <img
-              class="user-avatar"
-              src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-              alt=""
-            />
-          </div>
-          <div class="content">
-            <div class="detail">
-              <div class="name mr-1">Apple</div>
-              <div class="account mr-1">@apple</div>
-              <div class="creat-time">3小時</div>
-            </div>
-            <div class="tweet">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
+              {{ tweet.description }}
             </div>
           </div>
 
@@ -146,9 +56,97 @@
   </div>
 </template>
 
-<style scoped>
-/* style start */
+<script>
+const dummyData = [
+  // 第一則推文
+  {
+    id: 1,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+    createdAt: "1小時",
+    updatedAt: "...",
+    isLiked: true,
+    UserId: 1,
+    User: {
+      id: 1,
+      name: "Apple",
+      cover:
+        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
+      account: "@apple",
+    },
+    likedCount: 100,
+    repliedCount: 100,
+  },
+  {
+    id: 2,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+    createdAt: "3小時",
+    updatedAt: "...",
+    isLiked: true,
+    UserId: 1,
+    User: {
+      id: 1,
+      name: "Apple",
+      cover:
+        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
+      account: "@apple",
+    },
+    likedCount: 100,
+    repliedCount: 100,
+  },
+  {
+    id: 3,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+    createdAt: "3小時",
+    updatedAt: "...",
+    isLiked: true,
+    UserId: 1,
+    User: {
+      id: 1,
+      name: "Apple",
+      cover:
+        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
+      account: "@apple",
+    },
+    likedCount: 100,
+    repliedCount: 100,
+  },
+  {
+    id: 4,
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+    createdAt: "5小時",
+    updatedAt: "...",
+    isLiked: true,
+    UserId: 1,
+    User: {
+      id: 1,
+      name: "Apple",
+      cover:
+        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
+      account: "@apple",
+    },
+    likedCount: 100,
+    repliedCount: 100,
+  },
+];
+export default {
+  data() {
+    return {
+      tweets: [],
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.tweets = dummyData;
+    },
+  },
+};
+</script>
 
+<style scoped>
+/* left side */
 nav {
   width: 380px;
   position: fixed;
@@ -159,22 +157,41 @@ nav {
   border: 1px solid #e6ecf0;
   background: #ffffff;
 }
-nav .logo {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 2rem;
+
+.pannel-container {
+  width: 100%;
 }
-nav a {
-  margin-bottom: 3rem;
-  font-size: 1.3rem;
-  color: black;
+.logo-container {
+  margin-top: 14px;
+}
+.logo {
+  height: 30px;
+  width: 30px;
+}
+.pannel-icon-container {
+  width: 100%;
+  height: 60px;
 }
 
-.top-items {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.pannel-icon {
+  width: 22.2px;
+  height: 20.25px;
+  margin: auto 0 auto 0;
 }
+.pannel-icon-text {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 60px;
+  margin: auto 0 auto 20px;
+  cursor: pointer;
+}
+.pannel-icon-container .chosen {
+  color: #ff6600;
+}
+
+/* right side */
 
 #main-app {
   height: 100%;

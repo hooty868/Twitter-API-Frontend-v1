@@ -2,7 +2,7 @@
 <template>
   <div class="container py-5 w-100">
     <form class="w-100">
-      <img alt="logo" src="../assets/logo.png" />
+      <img alt="logo" src="" />
 
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>
