@@ -44,12 +44,30 @@
         </div>
         <div class="user-tweet">
           <div class="content-control d-flex">
-            <div class="tweets content active">推文</div>
-            <div class="response content">推文與回覆</div>
-            <div class="liked content">喜歡的內容</div>
+            <div
+              class="tweets content"
+              v-bind:class="{ active: showContent.tweets }"
+              v-on:click="showTweets()"
+            >
+              推文
+            </div>
+            <div
+              class="response content"
+              v-bind:class="{ active: showContent.reply }"
+              v-on:click="showReply()"
+            >
+              推文與回覆
+            </div>
+            <div
+              class="liked content"
+              v-bind:class="{ active: showContent.like }"
+              v-on:click="showLike()"
+            >
+              喜歡的內容
+            </div>
           </div>
           <div class="content-render">
-            <div class="card">
+            <div class="card" v-if="showContent.tweets">
               <div class="user-avatar">
                 <img
                   class="user-avatar"
@@ -77,6 +95,35 @@
                 </div>
               </div>
             </div>
+            <div class="card" v-if="showContent.like">
+              <div class="user-avatar">
+                <img
+                  class="user-avatar"
+                  src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
+                  alt=""
+                />
+              </div>
+              <div class="content">
+                <div class="detail">
+                  <div class="name mr-1">Devon Lane</div>
+                  <div class="account mr-1">@DL・</div>
+                  <div class="creat-time">3 小時</div>
+                </div>
+                <div class="tweet">
+                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                  amet sint. Velit officia consequat duis enim velit mollit.
+                  Exercitation veniam consequat sunt nostrud amet.
+                </div>
+                <div class="follow-content">
+                  <div class="response">
+                    <img src="/image/reply_icon.png" alt="" />13
+                  </div>
+                  <div class="like">
+                    <img src="/image/liked.png" alt="" />76
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="main-follower col-4 h-100"></div>
@@ -98,8 +145,29 @@ export default {
   },
   data() {
     return {
-      twitter: "",
+      showContent: {
+        tweets: true,
+        reply: false,
+        like: false,
+      },
     };
+  },
+  methods: {
+    showTweets() {
+      this.showContent.tweets = true;
+      this.showContent.reply = false;
+      this.showContent.like = false;
+    },
+    showReply() {
+      this.showContent.tweets = false;
+      this.showContent.reply = true;
+      this.showContent.like = false;
+    },
+    showLike() {
+      this.showContent.tweets = false;
+      this.showContent.reply = false;
+      this.showContent.like = true;
+    },
   },
 };
 </script>
@@ -246,7 +314,7 @@ export default {
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;
-  height: 144px;
+  min-height: 144px;
   display: flex;
   flex-direction: row;
   padding: 15px 0 0 13px;
@@ -281,6 +349,7 @@ export default {
 
 .follow-content {
   display: flex;
+  margin-bottom: 14px;
 }
 .content .follow-content img {
   width: 14px;
