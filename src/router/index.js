@@ -34,6 +34,11 @@ const routes = [
     component: Main
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('../views/Profile.vue')
+  },
+  {
     path: '/admin/signin',
     name: 'admin-signin',
     component: AdminSignIn
