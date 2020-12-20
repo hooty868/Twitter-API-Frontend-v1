@@ -8,34 +8,27 @@
         <div class="header pl-3">
           <img src="/image/arrow.png" alt="" />
           <div class="header-content">
-            <p class="name">John Doe</p>
+            <p class="name">{{ user.name }}</p>
             <p class="twitter">25推文</p>
           </div>
         </div>
         <div class="user-info">
           <div class="background">
-            <img
-              src="https://images.unsplash.com/photo-1535294435445-d7249524ef2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80"
-              alt=""
-            />
+            <img :src="user.cover" alt="" />
             <div class="avatar">
-              <img
-                src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-                alt=""
-              />
+              <img :src="user.avatar" alt="" />
             </div>
           </div>
           <div class="user">
             <div class="detail">
-              <p class="name">John Doe</p>
-              <p class="account">@heyjohn</p>
+              <p class="name">{{ user.name }}</p>
+              <p class="account">@{{ user.account }}</p>
               <p class="intro">
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint.
+                {{ user.introduction }}
               </p>
               <div class="follow-detail">
-                <p>34個 <span>追隨中</span></p>
-                <p>59位 <span>追隨者</span></p>
+                <p>{{ user.followingCount }}個 <span>追隨中</span></p>
+                <p>{{ user.followerCount }}位 <span>追隨者</span></p>
                 <div />
                 <button class="btn edit">編輯個人資料</button>
               </div>
@@ -66,67 +59,63 @@
               喜歡的內容
             </div>
           </div>
-          <div class="content-render">
-            <div class="card" v-if="showContent.tweets">
+          <div class="content-render" v-if="showContent.tweets">
+            <div class="card" v-for="tweet in tweets" :key="tweet.id">
               <div class="user-avatar">
-                <img
-                  class="user-avatar"
-                  src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-                  alt=""
-                />
+                <img class="user-avatar" :src="tweet.user.avatar" alt="" />
               </div>
               <div class="content">
                 <div class="detail">
-                  <div class="name mr-1">John Doe</div>
-                  <div class="account mr-1">@heyjohn ・</div>
-                  <div class="creat-time">3 小時</div>
+                  <div class="name mr-1">{{ tweet.user.name }}</div>
+                  <div class="account mr-1">@{{ tweet.user.account }} ・</div>
+                  <div class="creat-time">{{ tweet.createdAt | fromNow }}</div>
                 </div>
                 <div class="tweet">
-                  Je guide mon ami @Karnagemvp dans cette belle division qu'est
-                  le GOLD
+                  {{ tweet.description }}
                 </div>
                 <div class="follow-content">
                   <div class="response">
-                    <img src="/image/reply_icon.png" alt="" />13
+                    <img src="/image/reply_icon.png" alt="" />{{
+                      user.repliedCount
+                    }}
                   </div>
                   <div class="like">
-                    <img src="/image/like_icon.png" alt="" />76
+                    <img src="/image/like_icon.png" alt="" />{{
+                      user.likedCount
+                    }}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card" v-if="showContent.like">
+          </div>
+          <div class="content-render" v-if="showContent.like">
+            <div class="card" v-for="like in likes" :key="like.id">
               <div class="user-avatar">
-                <img
-                  class="user-avatar"
-                  src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-                  alt=""
-                />
+                <img class="user-avatar" :src="like.user.avatar" alt="" />
               </div>
               <div class="content">
                 <div class="detail">
-                  <div class="name mr-1">Devon Lane</div>
-                  <div class="account mr-1">@DL・</div>
-                  <div class="creat-time">3 小時</div>
+                  <div class="name mr-1">{{ like.user.name }}</div>
+                  <div class="account mr-1">@{{ like.user.account }}・</div>
+                  <div class="creat-time">{{ like.createdAt | fromNow }}</div>
                 </div>
                 <div class="tweet">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
-                  Exercitation veniam consequat sunt nostrud amet.
+                  {{ like.description }}
                 </div>
                 <div class="follow-content">
                   <div class="response">
-                    <img src="/image/reply_icon.png" alt="" />13
+                    <img src="/image/reply_icon.png" alt="" />{{
+                      like.repliedCount
+                    }}
                   </div>
                   <div class="like">
-                    <img src="/image/liked.png" alt="" />76
+                    <img src="/image/liked.png" alt="" />{{ like.likedCount }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="main-follower col-4 h-100"></div>
       </div>
       <div class="main-follower col-4 h-100">
         <Followers />
@@ -138,13 +127,27 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
+// import { mapState } from "vuex";
+import userAPI from "../apis/user";
+import { fromNowFilter } from "./../utils/mixins";
+
 export default {
+  mixins: [fromNowFilter],
   components: {
     Navbar,
     Followers,
   },
   data() {
     return {
+      currentUser: {
+        id: -1,
+        name: "",
+        email: "",
+        role: "",
+      },
+      user: "",
+      tweets: "",
+      likes: "",
       showContent: {
         tweets: true,
         reply: false,
@@ -152,7 +155,38 @@ export default {
       },
     };
   },
+  created() {
+    this.fetchUsers();
+    this.fetchTweets();
+    this.fetchLikes();
+  },
   methods: {
+    async fetchUsers() {
+      try {
+        const { data } = await userAPI.getUser(11);
+        this.user = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchTweets() {
+      try {
+        const { data } = await userAPI.getTweets(11);
+        this.tweets = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchLikes() {
+      try {
+        const { data } = await userAPI.getLikes(11);
+        console.log(data);
+        this.likes = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     showTweets() {
       this.showContent.tweets = true;
       this.showContent.reply = false;
@@ -244,6 +278,7 @@ export default {
   width: 130px;
   height: 130px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .user {

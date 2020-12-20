@@ -49,7 +49,12 @@
             </div>
           </div>
 
-          <div class="tweet-delete">x</div>
+          <div
+            class="tweet-delete"
+            @click.stop.prevent="deleteTweets(tweet.id)"
+          >
+            x
+          </div>
         </div>
       </div>
     </main>
@@ -57,77 +62,9 @@
 </template>
 
 <script>
-const dummyData = [
-  // 第一則推文
-  {
-    id: 1,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    createdAt: "1小時",
-    updatedAt: "...",
-    isLiked: true,
-    UserId: 1,
-    User: {
-      id: 1,
-      name: "Apple",
-      cover:
-        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
-      account: "@apple",
-    },
-    likedCount: 100,
-    repliedCount: 100,
-  },
-  {
-    id: 2,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    createdAt: "3小時",
-    updatedAt: "...",
-    isLiked: true,
-    UserId: 1,
-    User: {
-      id: 1,
-      name: "Apple",
-      cover:
-        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
-      account: "@apple",
-    },
-    likedCount: 100,
-    repliedCount: 100,
-  },
-  {
-    id: 3,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    createdAt: "3小時",
-    updatedAt: "...",
-    isLiked: true,
-    UserId: 1,
-    User: {
-      id: 1,
-      name: "Apple",
-      cover:
-        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
-      account: "@apple",
-    },
-    likedCount: 100,
-    repliedCount: 100,
-  },
-  {
-    id: 4,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    createdAt: "5小時",
-    updatedAt: "...",
-    isLiked: true,
-    UserId: 1,
-    User: {
-      id: 1,
-      name: "Apple",
-      cover:
-        "https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80",
-      account: "@apple",
-    },
-    likedCount: 100,
-    repliedCount: 100,
-  },
-];
+import adminAPI from "../apis/admin";
+import { Toast } from "./../utils/helpers";
+
 export default {
   data() {
     return {
@@ -138,8 +75,19 @@ export default {
     this.fetchData();
   },
   methods: {
-    fetchData() {
-      this.tweets = dummyData;
+    async fetchData() {
+      try {
+        const data = await adminAPI.users.get();
+        console.log(data);
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取得推文資料，請稍後再試",
+        });
+      }
+    },
+    deleteTweets(tweetId) {
+      this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId);
     },
   },
 };
