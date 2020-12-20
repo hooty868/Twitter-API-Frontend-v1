@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <form class="form-group w-100">
+    <form class="form-group w-100" @submit.prevent.stop="handleSubmit">
       <div class="logo-container text-center">
         <img class="logo" src="/image/Logo.png" alt="Logo" />
       </div>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
 export default {
   data() {
     return {
@@ -63,6 +64,21 @@ export default {
       password: "",
       isProcessing: false,
     };
+  },
+
+  methods: {
+    handleSubmit() {
+      authorizationAPI
+        .signIn({
+          account: this.account,
+          password: this.password,
+        })
+        .then((response) => {
+          // TODO: 取得 API 請求後的資料
+
+          console.log("response", response);
+        });
+    },
   },
 };
 </script>

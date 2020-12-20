@@ -68,30 +68,9 @@
 </template>
 
 <script>
-const dummyData = [
-  {
-    id: 2,
-    name: "user1",
-    account: "user1",
-    cover: "https://loremflickr.com/320/240/corgi?lock=25.884956686362635",
-    avatar: "https://loremflickr.com/320/240/corgi?lock=49.66343288864259",
-    followingCount: 3,
-    followerCount: 2,
-    tweetCount: 10,
-    LikedCount: 14,
-  },
-  {
-    id: 3,
-    name: "user2",
-    account: "user2",
-    cover: "https://loremflickr.com/320/240/corgi?lock=9.441819108662319",
-    avatar: "https://loremflickr.com/320/240/corgi?lock=41.50951344608752",
-    followingCount: 2,
-    followerCount: 2,
-    tweetCount: 10,
-    LikedCount: 6,
-  },
-];
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+
 export default {
   data() {
     return {
@@ -103,8 +82,18 @@ export default {
   },
 
   methods: {
-    fetchData() {
-      this.users = dummyData;
+    async fetchData() {
+      try {
+        // STEP 3: 向伺服器取得餐廳類別清單
+        const { data } = await adminAPI.users.get();
+        this.users = data;
+      } catch (error) {
+        // STEP 4: 在 catch 中進行錯誤處理
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
     },
   },
 };

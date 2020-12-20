@@ -11,9 +11,9 @@
       <div class="form-label-group mb-2">
         <input
           v-model="account"
-          id="email"
-          name="email"
-          type="email"
+          id="account"
+          name="account"
+          type="account"
           placeholder="帳號"
           autocomplete="username"
           required
@@ -33,7 +33,7 @@
         />
       </div>
 
-      <button class="mb-3" type="submit">登入</button>
+      <button class="mb-3" type="submit" :disabled="isProcessing">登入</button>
     </form>
     <div class="link">
       <router-link to="/signin"> 前台登入 </router-link>
@@ -42,23 +42,60 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
+
 export default {
   data() {
     return {
       account: "",
       password: "",
+      isProcessing: false,
     };
   },
   methods: {
     handleSubmit() {
-      const data = JSON.stringify({
-        account: this.account,
-        password: this.password,
-      });
+      if (!this.account || !this.password) {
+        Toast.fire({
+          icon: "warning",
+          title: "請填入 email 和 password",
+        });
+        return;
+      }
 
-      // TODO: 向後端驗證使用者登入資訊是否合法
-      console.log("data", data);
-      this.$router.push("/admin/users");
+      this.isProcessing = true;
+
+      authorizationAPI
+        .signIn({
+          account: this.account,
+          password: this.password,
+        })
+        .then((response) => {
+          const { data } = response;
+
+          if (data.status !== "success") {
+            throw new Error(data.message);
+          }
+
+          if (data.user.role !== "admin") {
+            throw new Error("這是沒有管理權限的帳號");
+          }
+
+          localStorage.setItem("token", data.token);
+          this.$router.push("/admin/users");
+        })
+        .catch((error) => {
+          // 將密碼欄位清空
+          this.password = "";
+
+          // 顯示錯誤提示
+          Toast.fire({
+            icon: "warning",
+            title: "請確認您輸入了正確的帳號密碼",
+          });
+          this.isProcessing = false;
+          console.log("error", error);
+        });
     },
   },
 };
