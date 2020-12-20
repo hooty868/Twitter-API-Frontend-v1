@@ -29,8 +29,16 @@
               <div class="follow-detail">
                 <p>{{ user.followingCount }}個 <span>追隨中</span></p>
                 <p>{{ user.followerCount }}位 <span>追隨者</span></p>
-                <div />
-                <button class="btn edit">編輯個人資料</button>
+
+                <div class="edit row">
+                  <div class="icon-wrapper">
+                    <img src="/image/mail.png" alt="" />
+                  </div>
+                  <div class="icon-wrapper">
+                    <img src="/image/bell.png" alt="" />
+                  </div>
+                  <button class="btn">編輯個人資料</button>
+                </div>
               </div>
             </div>
           </div>
@@ -307,6 +315,12 @@ export default {
   color: #657786;
 }
 
+.detail .edit {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
+
 .detail button {
   width: 122px;
   height: 40px;
@@ -314,9 +328,17 @@ export default {
   color: #ff6600;
   font-weight: bold;
   border-radius: 100px;
-  position: absolute;
-  right: 15px;
-  top: 10px;
+}
+
+.detail .edit .icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
 }
 
 .user-tweet {

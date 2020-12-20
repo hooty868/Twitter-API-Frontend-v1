@@ -39,6 +39,16 @@ const routes = [
     component: () => import('../views/Profile.vue')
   },
   {
+    path: '/profile/:id',
+    name: 'profile-other',
+    component: () => import('../views/ProfileOther.vue')
+  },
+  {
+    path: '/follow/',
+    name: 'follow-other',
+    component: () => import('../views/follow.vue')
+  },
+  {
     path: '/admin',
     name: 'admin',
     redirect: '/admin/signin'
