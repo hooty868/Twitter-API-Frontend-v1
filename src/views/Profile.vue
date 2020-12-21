@@ -30,7 +30,14 @@
                 <p>{{ user.followingCount }}個 <span>追隨中</span></p>
                 <p>{{ user.followerCount }}位 <span>追隨者</span></p>
                 <div />
-                <button class="btn edit">編輯個人資料</button>
+                <button
+                  class="btn edit"
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#edit"
+                >
+                  編輯個人資料
+                </button>
               </div>
             </div>
           </div>
@@ -117,6 +124,68 @@
       </div>
       <div class="main-follower col-4 h-100">
         <Followers />
+      </div>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="edit"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="header-wrapper">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                x
+              </button>
+              <div>
+                <p class="modal-title" id="exampleModalLabel">編輯個人資料</p>
+              </div>
+              <button type="button" class="save btn btn-primary">儲存</button>
+            </div>
+          </div>
+          <div class="background">
+            <img :src="user.cover" alt="" />
+            <div class="avatar">
+              <img :src="user.avatar" alt="" />
+            </div>
+          </div>
+          <div class="text-input">
+            <div class="form-label-group mb-2 input-name">
+              <input
+                v-model="account"
+                id="name"
+                name="name"
+                type="name"
+                placeholder="名稱"
+                autocomplete="username"
+                required
+                autofocus
+              />
+            </div>
+
+            <div class="form-label-group mb-3 input-intro">
+              <input
+                v-model="password"
+                id="introduction"
+                name="introduction"
+                type="introduction"
+                placeholder="自我介紹"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -392,5 +461,100 @@ export default {
 
 .content .follow-content .response {
   margin-right: 50px;
+}
+
+/* modal content */
+
+.modal-content {
+  width: 600px;
+  height: 654px;
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.header-wrapper .modal-title {
+  font-weight: bold;
+  font-size: 19px;
+  margin-right: 342px;
+  width: 100%;
+}
+
+.header-wrapper .save {
+  background: #ff6600;
+  border-radius: 100px;
+  color: #ffffff;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 30px;
+}
+
+.header-wrapper .close {
+  color: #ff6600;
+  font-size: 30px;
+  margin-right: 44px;
+}
+
+.modal-content .background {
+  position: relative;
+}
+
+.modal-content .avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: -70px;
+  left: 14px;
+}
+
+.modal-content .avatar img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modal-content .text-input {
+  margin-top: 80px;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content input {
+  background: #f5f8fa;
+  display: block;
+  border: none;
+  border-bottom: 2px solid #657786;
+  width: 570px;
+}
+
+.modal-content #name {
+  height: 54px;
+}
+
+.modal-content #introduction {
+  height: 150px;
+}
+
+.modal-content input::placeholder {
+  position: relative;
+  top: -25%;
+  left: 1%;
+  font-size: 0.9rem;
+  color: #657786;
 }
 </style>
