@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <form class="form-group w-100">
+    <form class="form-group w-100" @submit.prevent.stop="handleSubmit">
       <div class="logo-container text-center">
         <img class="logo" src="/image/Logo.png" alt="Logo" />
       </div>
@@ -47,7 +47,7 @@
           <router-link to="/signup">註冊 Alphitter·</router-link>
         </p>
         <p>
-          <router-link to="/signup">後台登入</router-link>
+          <router-link to="/admin/signin">後台登入</router-link>
         </p>
       </div>
     </form>
@@ -55,6 +55,9 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
+
 export default {
   data() {
     return {
@@ -64,10 +67,46 @@ export default {
       isProcessing: false,
     };
   },
+  methods: {
+    async handleSubmit() {
+      try {
+        if (!this.account || !this.password) {
+          Toast.fire({
+            icon: "warning",
+            title: "請填入 account 和 password",
+          });
+          return;
+        }
+        this.isProcessing = true;
+        const response = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password,
+        });
+        const { data } = response;
+        console.log(data);
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        localStorage.setItem("token", data.token);
+
+        this.$store.commit("setCurrentUser", data.user);
+
+        this.$router.push("/main");
+      } catch (error) {
+        this.password = "";
+        this.isProcessing = false;
+
+        Toast.fire({
+          icon: "warning",
+          title: "請確認您輸入了正確的帳號密碼",
+        });
+      }
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .form-group {
   max-width: 540px;
   margin: 0 auto 0 auto;

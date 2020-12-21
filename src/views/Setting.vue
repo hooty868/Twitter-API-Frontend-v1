@@ -5,13 +5,16 @@
     </div>
     <div class="main-content">
       <div class="header"><p>帳戶設定</p></div>
-      <form class="form-group w-100">
+      <form
+        class="form-group w-100"
+        @submit.stop.prevent="handleSubmit(UserId)"
+      >
         <div class="form-label-group">
           <label for="account">帳號</label>
           <input
             id="account"
             name="account"
-            v-model="account"
+            v-model="userProfile.account"
             type="account"
             class="form-input form-control"
             placeholder=""
@@ -25,7 +28,7 @@
           <input
             id="name"
             name="name"
-            v-model="name"
+            v-model="userProfile.name"
             type="text"
             class="form-input form-control"
             placeholder=""
@@ -40,7 +43,7 @@
           <input
             id="email"
             name="email"
-            v-model="email"
+            v-model="userProfile.email"
             type="email"
             class="form-input form-control"
             placeholder=""
@@ -54,7 +57,7 @@
           <input
             id="password"
             name="password"
-            v-model="password"
+            v-model="userProfile.password"
             type="password"
             class="form-input form-control"
             placeholder=""
@@ -68,7 +71,7 @@
           <input
             id="password-check"
             name="passwordCheck"
-            v-model="passwordCheck"
+            v-model="userProfile.checkPassword"
             type="password"
             class="form-input form-control"
             placeholder=""
@@ -77,7 +80,11 @@
           />
         </div>
 
-        <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
+        <button
+          class="btn btn-lg btn-submit btn-block mb-3"
+          type="submit"
+          :disabled="isProcessing"
+        >
           Submit
         </button>
       </form>
@@ -87,18 +94,75 @@
 
 <script>
 import Navbar from "./../components/Navbar";
+import userAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+
 export default {
   components: {
     Navbar,
   },
   data() {
     return {
-      account: "",
-      name: "",
-      email: "",
-      password: "",
-      passwordCheck: "",
+      userProfile: {
+        account: "",
+        name: "",
+        email: "",
+        password: "",
+        passwordCheck: "",
+      },
+      isProcessing: false,
+      UserId: "",
     };
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchRestaurant(id);
+  },
+  methods: {
+    async fetchRestaurant(userId) {
+      try {
+        this.UserId = userId;
+        const { data } = await userAPI.UserProfile(userId);
+        const { account, name, email } = data;
+        this.userProfile = {
+          account: account,
+          name: name,
+          email: email,
+          password: "",
+          checkPassword: "",
+        };
+      } catch (error) {
+        this.isProcessing = false;
+        Toast.fire({
+          icon: "error",
+          title: "無法更新使用者資訊，請稍後再試",
+        });
+      }
+    },
+    async handleSubmit(userId) {
+      try {
+        this.isProcessing = true;
+        const response = await userAPI.UpdateUserSettingProfile(userId, {
+          account: this.userProfile.account,
+          name: this.userProfile.name,
+          email: this.userProfile.email,
+          password: this.userProfile.password,
+          checkPassword: this.userProfile.checkPassword,
+        });
+        console.log(response);
+        // if (data.status !== "success") {
+        //   throw new Error(data.message);
+        // }
+
+        this.$router.push({ name: "main" });
+      } catch (error) {
+        this.isProcessing = false;
+        Toast.fire({
+          icon: "error",
+          title: "無法更新使用者資訊，請稍後再試",
+        });
+      }
+    },
   },
 };
 </script>

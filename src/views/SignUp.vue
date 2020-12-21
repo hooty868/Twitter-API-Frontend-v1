@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="form-group w-100">
+    <form class="form-group w-100" @submit.stop.prevent="handleSubmit">
       <div class="logo-container text-center">
         <img class="logo" src="/image/Logo.png" alt="Logo" />
       </div>
@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
 export default {
   data() {
     return {
@@ -101,6 +103,54 @@ export default {
       password: "",
       passwordCheck: "",
     };
+  },
+  methods: {
+    async handleSubmit() {
+      try {
+        if (
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.passwordCheck
+        ) {
+          Toast.fire({
+            icon: "warning",
+            title: "請確認已填寫所有欄位",
+          });
+          return;
+        }
+        if (this.password !== this.passwordCheck) {
+          Toast.fire({
+            icon: "warning",
+            title: "兩次輸入的密碼不同",
+          });
+          this.passwordCheck = "";
+          return;
+        }
+
+        const checkData = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        };
+        let { data } = await authorizationAPI.signUp(checkData);
+        if (data.status === "error") {
+          throw new Error(data.message);
+        }
+        Toast.fire({
+          icon: "success",
+          title: data.message,
+        });
+        this.$router.push("/signin");
+      } catch (e) {
+        // TODO: 向後端驗證使用者登入資訊是否合法
+        Toast.fire({
+          icon: "warning",
+          title: `無法註冊 - ${e.message}`,
+        });
+      }
+    },
   },
 };
 </script>
