@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NotFound from '../views/NotFound.vue'
-import SignIn from '../views/SignIn.vue'
+import NotFound from '../views/NotFound'
+import SignIn from '../views/SignIn'
 import AdminSignIn from './../views/AdminSignIn'
-import Main from '../views/main.vue'
-import Main from '../views/main.vue'
-import AdminSignIn from './../views/AdminSignIn.vue'
+import Main from '../views/main'
 import store from './../store'
 
 Vue.use(VueRouter)
@@ -55,6 +53,8 @@ const routes = [
     path: '/admin',
     name: 'admin',
     redirect: '/admin/signin'
+  },
+  {
     path: '/twitterdetail',
     name: 'main',
     component: () => import('../views/twitterIndex.vue')
