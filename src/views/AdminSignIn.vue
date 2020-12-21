@@ -80,7 +80,7 @@ export default {
           }
 
           localStorage.setItem("token", data.token);
-          this.$router.push("/admin/users");
+          this.$router.push("/admin/tweets");
         })
         .catch((error) => {
           // 將密碼欄位清空

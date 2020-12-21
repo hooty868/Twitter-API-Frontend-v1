@@ -5,10 +5,13 @@
         <div class="logo-container">
           <img class="logo" src="/image/Logo.png" alt="Logo" />
         </div>
-        <div class="pannel-icon-container chosen d-flex">
-          <img class="pannel-icon" src="/image/icon_index.png" alt="Index" />
-          <h1 class="pannel-icon-text">推文清單</h1>
-        </div>
+
+        <router-link to="/admin/tweets">
+          <div class="pannel-icon-container chosen d-flex">
+            <img class="pannel-icon" src="/image/icon_index.png" alt="Index" />
+            <h1 class="pannel-icon-text">推文清單</h1>
+          </div>
+        </router-link>
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
@@ -31,7 +34,7 @@
       </div>
       <div class="card-list-panel d-flex justify-content-start">
         <div class="user-list">
-          <div class="card" v-for="user in users" :key="user.id">
+          <div class="card" v-for="user in sortData" :key="user.tweetCount">
             <div class="user-cover">
               <img :src="user.cover" class="user-cover" />
             </div>
@@ -75,6 +78,7 @@ export default {
   data() {
     return {
       users: [],
+      sortType: "tweetCount",
     };
   },
   created() {
@@ -94,6 +98,18 @@ export default {
           title: "無法取得使用者資料，請稍後再試",
         });
       }
+    },
+  },
+  computed: {
+    sortData: function () {
+      let vm = this;
+      let sortItem = vm.sortType;
+      let newData = vm.users.sort(function (a, b) {
+        a = a[sortItem];
+        b = b[sortItem];
+        return b - a; // 降冪 => (由上而下) 遞減
+      });
+      return newData;
     },
   },
 };
@@ -140,6 +156,7 @@ nav {
   line-height: 60px;
   margin: auto 0 auto 20px;
   cursor: pointer;
+  color: black;
 }
 .pannel-icon-container .chosen {
   color: #ff6600;
@@ -152,8 +169,6 @@ nav {
 }
 
 .title {
-  position: fixed;
-  top: 0%;
   border: 1px solid #e6ecf0;
   height: 55px;
   width: 100%;
