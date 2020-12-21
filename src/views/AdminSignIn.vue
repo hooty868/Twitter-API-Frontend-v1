@@ -1,16 +1,18 @@
 // ./src/views/SignIn.vue
 <template>
   <div class="container py-5 w-100">
-    <form class="w-100">
-      <img class="logo" alt="logo" src="/image/Logo.png" />
+    <form class="w-100" @submit.prevent.stop="handleSubmit">
+      <img alt="logo" src="/image/Logo.png" />
+
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>
       </div>
       <div class="form-label-group mb-2">
         <input
-          id="email"
-          name="email"
-          type="email"
+          v-model="account"
+          id="account"
+          name="account"
+          type="account"
           placeholder="帳號"
           autocomplete="username"
           required
@@ -19,6 +21,7 @@
       </div>
       <div class="form-label-group mb-3">
         <input
+          v-model="password"
           id="password"
           name="password"
           type="password"
@@ -28,13 +31,73 @@
         />
       </div>
 
-      <button class="mb-3" type="submit">登入</button>
+      <button class="mb-3" type="submit" :disabled="isProcessing">登入</button>
     </form>
     <div class="link">
-      <router-link to="/signin">前台登入</router-link>
+      <router-link to="/signin"> 前台登入 </router-link>
     </div>
   </div>
 </template>
+
+<script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
+
+export default {
+  data() {
+    return {
+      account: "",
+      password: "",
+      isProcessing: false,
+    };
+  },
+  methods: {
+    handleSubmit() {
+      if (!this.account || !this.password) {
+        Toast.fire({
+          icon: "warning",
+          title: "請填入 email 和 password",
+        });
+        return;
+      }
+
+      this.isProcessing = true;
+
+      authorizationAPI
+        .signIn({
+          account: this.account,
+          password: this.password,
+        })
+        .then((response) => {
+          const { data } = response;
+
+          if (data.status !== "success") {
+            throw new Error(data.message);
+          }
+
+          if (data.user.role !== "admin") {
+            throw new Error("這是沒有管理權限的帳號");
+          }
+
+          localStorage.setItem("token", data.token);
+          this.$router.push("/admin/users");
+        })
+        .catch((error) => {
+          // 將密碼欄位清空
+          this.password = "";
+
+          // 顯示錯誤提示
+          Toast.fire({
+            icon: "warning",
+            title: "請確認您輸入了正確的帳號密碼",
+          });
+          this.isProcessing = false;
+          console.log("error", error);
+        });
+    },
+  },
+};
+</script>
 
 <style scoped>
 img {
@@ -53,7 +116,7 @@ input {
   background: #f5f8fa;
   display: block;
   border: none;
-  border-bottom: 1px solid #657786;
+  border-bottom: 2px solid #657786;
   width: 540px;
   height: 50px;
 }
@@ -83,5 +146,10 @@ button {
   margin: auto;
   text-align: end;
   font-weight: bold;
+}
+.link a {
+  text-decoration: none;
+
+  border-bottom: 1px solid #0099ff;
 }
 </style>

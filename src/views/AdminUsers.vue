@@ -2,44 +2,62 @@
   <div id="main-app">
     <nav class="d-flex flex-column justify-content-between align-items-center">
       <div class="top-items">
-        <img class="logo" src="/image/Logo.png" />
-        <a href="#" class="text-center">推文清單</a>
-        <a href="#" class="text-center">使用者列表</a>
+        <div class="logo-container">
+          <img class="logo" src="/image/Logo.png" alt="Logo" />
+        </div>
+        <div class="pannel-icon-container chosen d-flex">
+          <img class="pannel-icon" src="/image/icon_index.png" alt="Index" />
+          <h1 class="pannel-icon-text">推文清單</h1>
+        </div>
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/icon_profile_orange.png"
+            alt="Profile"
+          />
+          <h1 class="pannel-icon-text chosen">使用者列表</h1>
+        </div>
       </div>
       <div>
-        <a href="#" class="text-center">登出</a>
+        <div class="d-flex align-items-center">
+          <img class="pannel-icon m-3" src="/image/logout@2x.png" alt="Index" />
+          <a href="#" class="text-center text-dark">登出</a>
+        </div>
       </div>
     </nav>
     <main id="main-content">
       <div class="title">
         <h4>使用者列表</h4>
       </div>
-      <div class="card-list-panel">
+      <div class="card-list-panel d-flex justify-content-start">
         <div class="user-list">
-          <div class="card">
+          <div class="card" v-for="user in users" :key="user.id">
             <div class="user-cover">
-              <img
-                src="https://images.unsplash.com/photo-1535294435445-d7249524ef2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80"
-                class="user-cover"
-              />
+              <img :src="user.cover" class="user-cover" />
             </div>
             <div class="avatar">
-              <img
-                class="user-avatar"
-                src="https://images.unsplash.com/photo-1511382686815-a9a670f0a512?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=968&q=80"
-                alt=""
-              />
+              <img class="user-avatar" :src="user.avatar" alt="" />
             </div>
             <div class="user-info">
-              <p class="name">John Doe</p>
-              <p class="account">@heyjohn</p>
+              <p class="name">{{ user.name }}</p>
+              <p class="account">{{ user.account }}</p>
               <div class="user-detail">
-                <p>1.5k</p>
-                <p>20k</p>
+                <div class="d-flex align-items-center mr-2">
+                  <img class="profile_icon" src="/image/like_icon.png" alt="" />
+                  <p>{{ user.LikedCount }}</p>
+                </div>
+                <div class="d-flex align-items-center mr-2">
+                  <img
+                    class="profile_icon"
+                    src="/image/reply_icon.png"
+                    alt=""
+                  />
+                  <p>{{ user.tweetCount }}</p>
+                </div>
               </div>
               <div class="user-detail">
-                <p>34個 <span>跟隨中</span></p>
-                <p>59位 <span>跟隨者</span></p>
+                <p>{{ user.followingCount }}個 <span>跟隨中</span></p>
+                <p>{{ user.followerCount }}位 <span>跟隨者</span></p>
               </div>
             </div>
           </div>
@@ -49,7 +67,40 @@
   </div>
 </template>
 
+<script>
+import adminAPI from "./../apis/admin";
+import { Toast } from "./../utils/helpers";
+
+export default {
+  data() {
+    return {
+      users: [],
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+
+  methods: {
+    async fetchData() {
+      try {
+        // STEP 3: 向伺服器取得餐廳類別清單
+        const { data } = await adminAPI.users.get();
+        this.users = data;
+      } catch (error) {
+        // STEP 4: 在 catch 中進行錯誤處理
+        Toast.fire({
+          icon: "error",
+          title: "無法取得使用者資料，請稍後再試",
+        });
+      }
+    },
+  },
+};
+</script>
+
 <style scoped>
+/* left side */
 nav {
   width: 380px;
   position: fixed;
@@ -60,22 +111,41 @@ nav {
   border: 1px solid #e6ecf0;
   background: #ffffff;
 }
-nav .logo {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 2rem;
+
+.pannel-container {
+  width: 100%;
 }
-nav a {
-  margin-bottom: 3rem;
-  font-size: 1.3rem;
-  color: black;
+.logo-container {
+  margin-top: 14px;
+}
+.logo {
+  height: 30px;
+  width: 30px;
+}
+.pannel-icon-container {
+  width: 100%;
+  height: 60px;
 }
 
-.top-items {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.pannel-icon {
+  width: 22.2px;
+  height: 20.25px;
+  margin: auto 0 auto 0;
 }
+.pannel-icon-text {
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 60px;
+  margin: auto 0 auto 20px;
+  cursor: pointer;
+}
+.pannel-icon-container .chosen {
+  color: #ff6600;
+}
+
+/* right side */
 
 #main-content {
   margin-left: 380px;
@@ -97,8 +167,6 @@ nav a {
 
 .card-list-panel {
   background-color: white;
-  display: flex;
-  justify-content: center;
 }
 
 .user-list {
@@ -107,7 +175,7 @@ nav a {
   padding-top: 2rem;
   padding-left: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
 }
 
 .card {
@@ -167,6 +235,11 @@ nav a {
   font-weight: bold;
   font-size: 16px;
   margin-bottom: -0.3rem;
+}
+
+.profile_icon {
+  width: 19px;
+  height: 19px;
 }
 
 .account,
