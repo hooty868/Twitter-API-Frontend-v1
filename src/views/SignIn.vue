@@ -106,7 +106,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .form-group {
   max-width: 540px;
   margin: 0 auto 0 auto;
