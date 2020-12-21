@@ -2,31 +2,47 @@
   <nav class="navbar d-flex flex-column justify-content-between">
     <div class="pannel-container">
       <div class="logo-container">
-        <img class="logo" src="/image/Logo.png" alt="Logo" />
+        <router-link to="/main" class="button-link">
+          <img class="logo" src="/image/Logo.png" alt="Logo" />
+        </router-link>
       </div>
-      <div class="pannel-icon-container d-flex">
-        <img class="pannel-icon" src="/image/icon_index.png" alt="Index" />
-        <h1 class="pannel-icon-text">首頁</h1>
-      </div>
+
+      <router-link to="/main" class="button-link">
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/CurrentMainIcon.png"
+            alt="Index"
+          />
+          <h1 class="pannel-icon-text main">首頁</h1>
+        </div>
+      </router-link>
+
       <div class="pannel-icon-container d-flex">
         <img class="pannel-icon" src="/image/icon_profile.png" alt="Profile" />
         <h1 class="pannel-icon-text">個人資料</h1>
       </div>
-      <div class="pannel-icon-container d-flex">
-        <img class="pannel-icon" src="/image/icon_setting.png" alt="Setting" />
-        <h1 class="pannel-icon-text setting">設定</h1>
-      </div>
-      <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
-        推文
-      </button>
+      <router-link
+        :to="{ name: 'setting', params: { id: currentuser.id } }"
+        class="button-link"
+      >
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/icon_setting.png"
+            alt="Setting"
+          />
+          <h1 class="pannel-icon-text setting">設定</h1>
+        </div>
+      </router-link>
       <!-- Button trigger modal -->
       <button
         type="button"
-        class="btn btn-primary"
+        class="btn btn-lg btn-submit btn-block mb-3"
         data-toggle="modal"
         data-target="#exampleModal"
       >
-        Launch demo modal
+        推文
       </button>
 
       <!-- Modal -->
@@ -40,36 +56,47 @@
       >
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button
-                type="button"
-                class="close"
+            <div class="header">
+              <img
+                class="cancle-icon"
+                src="/image/cancle_icon.png"
+                alt="cancle"
                 data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+              />
             </div>
-            <div class="modal-body">...</div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
+            <div class="twitter-bar d-flex">
+              <img
+                class="profile-avater"
+                :src="currentuser.avatar"
+                alt="avater"
+              />
+              <form class="form-group" @submit.stop.prevent="handleSubmit">
+                <input
+                  id="twitter"
+                  v-model="twitter"
+                  name="twitter"
+                  type="twitter"
+                  class="twitter-input"
+                  autocomplete="twitter"
+                  placeholder="有什麼新鮮事？"
+                  required
+                  autofocus
+                />
+                <button
+                  class="btn btn-lg btn-twitter btn-block mb-3"
+                  type="submit"
+                  block
+                >
+                  推文
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="logOut-contaier">
-      <div class="pannel-icon-container d-flex">
+      <div class="pannel-icon-container d-flex" @click="logout">
         <img class="pannel-icon" src="/image/icon_logout.png" alt="Setting" />
         <h1 class="pannel-icon-text">登出</h1>
       </div>
@@ -78,8 +105,47 @@
 </template>
 
 <script>
+import userAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
+
 export default {
-  methods: {},
+  data() {
+    return {
+      twitter: "",
+      UserId: "",
+      currentuser: {},
+      isAuthenticated: false,
+    };
+  },
+  created() {
+    this.fetchUser();
+  },
+  methods: {
+    async fetchUser() {
+      try {
+        const Newdata = await userAPI.getCurrentUser();
+        const userId = Newdata.data.id;
+        const response = await userAPI.UserProfile(userId);
+        this.currentuser = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    handleSubmit() {
+      this.$emit("after-create-twitter", {
+        Description: this.twitter,
+      });
+      this.twitter = "";
+    },
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/signin");
+    },
+  },
 };
 </script>
 
@@ -100,6 +166,14 @@ export default {
   height: 30px;
   width: 30px;
 }
+.button-link {
+  color: #1c1c1c;
+  text-decoration: none;
+  background-color: none;
+}
+.button-link:-webkit-any-link {
+  color: #1c1c1c;
+}
 .pannel-icon-container {
   width: 100%;
   height: 60px;
@@ -117,7 +191,7 @@ export default {
   line-height: 60px;
   margin: auto 0 auto 20px;
 }
-.setting {
+.main {
   color: #ff6600;
 }
 .btn-submit {
@@ -127,5 +201,59 @@ export default {
 }
 .logOut-contaier {
   width: 100%;
+}
+/*modal style setting*/
+.modal-content {
+  width: 600px;
+  height: 300px;
+  background: #ffffff;
+  border-radius: 14px;
+  position: relative;
+}
+.modal-content .header {
+  width: 600px;
+  height: 40px;
+  margin-top: 15px;
+  border-bottom: 1px solid #e6ecf0;
+}
+.modal-content .header img {
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  top: 19.5px;
+  left: 19.5px;
+}
+.profile-avater {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 15px 10px auto 15px;
+}
+.form-group {
+  margin: 0;
+}
+.twitter-input {
+  border: none;
+  width: 510px;
+  height: auto;
+  margin-top: 27px;
+  word-break: break-all;
+}
+.btn-twitter {
+  width: 64px;
+  height: 40px;
+  background: #ff6600;
+  border-radius: 50px;
+  color: #fff;
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 18px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  margin: 0;
+  padding: 0;
 }
 </style>

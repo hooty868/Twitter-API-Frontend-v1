@@ -47,7 +47,7 @@
           <router-link to="/signup">註冊 Alphitter·</router-link>
         </p>
         <p>
-          <router-link to="/signup">後台登入</router-link>
+          <router-link to="/admin/signin">後台登入</router-link>
         </p>
       </div>
     </form>
@@ -57,6 +57,7 @@
 <script>
 import authorizationAPI from "./../apis/authorization";
 import { Toast } from "./../utils/helpers";
+
 export default {
   data() {
     return {
@@ -66,41 +67,30 @@ export default {
       isProcessing: false,
     };
   },
-
   methods: {
     async handleSubmit() {
       try {
         if (!this.account || !this.password) {
           Toast.fire({
             icon: "warning",
-            title: "請填入 email 和 password",
+            title: "請填入 account 和 password",
           });
           return;
         }
-
         this.isProcessing = true;
-
-        // 使用 authorizationAPI 的 signIn 方法
-        // 並且帶入使用者填寫的 email 和 password
         const response = await authorizationAPI.signIn({
           account: this.account,
           password: this.password,
         });
-
         const { data } = response;
-
+        console.log(data);
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-
-        console.log(data);
-
-        // 將 token 存放在 localStorage 內
         localStorage.setItem("token", data.token);
 
         this.$store.commit("setCurrentUser", data.user);
 
-        // 成功登入後轉址到餐聽首頁
         this.$router.push("/main");
       } catch (error) {
         this.password = "";

@@ -2,15 +2,18 @@
   <div class="container">
     <div class="row h-100">
       <div class="setting-pannel col-3 h-100">
-        <Navbar />
+        <Navbar
+          @after-create-twitter="afterCreateTwitter"
+          :user-profile="UserProfile"
+        />
       </div>
       <div class="main-content col h-100">
         <div class="header"><p>首頁</p></div>
         <div class="twitter-bar d-flex">
-          <img class="profile-avater" src="/image/Photo.png" alt="avater" />
-          <form class="form-group">
+          <img class="profile-avater" :src="UserProfile.avatar" alt="avater" />
+          <form class="form-group" @submit.stop.prevent="handleSubmit">
             <input
-              id="twitter"
+              id="twitter-main"
               v-model="twitter"
               name="twitter"
               type="twitter"
@@ -20,86 +23,15 @@
               required
               autofocus
             />
+            <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
+              推文
+            </button>
           </form>
-          <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
-            推文
-          </button>
         </div>
-        <div class="twitter-cards w-100">
-          <div class="comments-card w-100 d-flex">
-            <img class="card-avater" src="/image/Photo.png" alt="avater" />
-            <div class="card-content flex-grow-1">
-              <div class="content-title d-flex">
-                <p class="user-name">Apple</p>
-                <p class="user-account">@apple ·</p>
-                <p class="comment-date">3小時</p>
-              </div>
-              <div class="content-description">
-                <p class="content-text w-100">
-                  Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                  ullamco cillum dolor. Voluptate exercitation incididunt
-                  aliquip deserunt reprehenderit elit laborum.
-                </p>
-                <div class="button-pannel d-flex">
-                  <div class="reply-button d-flex">
-                    <img
-                      class="icon-img"
-                      src="/image/reply_icon.png"
-                      alt="icon"
-                    />
-                    <p class="reply-count">13</p>
-                  </div>
-                  <div class="like-button d-flex">
-                    <img
-                      class="icon-img"
-                      src="/image/like_icon.png"
-                      alt="icon"
-                    />
-                    <p class="like-count">46</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="comments-card w-100 d-flex">
-            <img class="card-avater" src="/image/Photo.png" alt="avater" />
-            <div class="card-content flex-grow-1">
-              <div class="content-title d-flex">
-                <p class="user-name">Apple</p>
-                <p class="user-account">@apple ·</p>
-                <p class="comment-date">3小時</p>
-              </div>
-              <div class="content-description">
-                <p class="content-text w-100">
-                  Nulla Lorem mollit cupidatat irure. Laborum magna nulla duis
-                  ullamco cillum dolor. Voluptate exercitation incididunt
-                  aliquip deserunt reprehenderit elit laborum.
-                </p>
-                <div class="button-pannel d-flex">
-                  <div class="reply-button d-flex">
-                    <img
-                      class="icon-img"
-                      src="/image/reply_icon.png"
-                      alt="icon"
-                    />
-                    <p class="reply-count">13</p>
-                  </div>
-                  <div class="like-button d-flex">
-                    <img
-                      class="icon-img"
-                      src="/image/like_icon.png"
-                      alt="icon"
-                    />
-                    <p class="like-count">46</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <twitterList :replied-twitter="repliedTwitter" :Twitters="twitters" />
       </div>
       <div class="main-follower col-4 h-100">
-        <Followers />
+        <Followers :user-profile="UserProfile" :follower-list="followerlist" />
       </div>
     </div>
   </div>
@@ -108,14 +40,176 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
+import twitterList from "./../components/twitterList";
+import twitterAPI from "./../apis/twitter";
+import userAPI from "./../apis/users";
+import followerAPI from "./../apis/followers";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
+
 export default {
   components: {
     Navbar,
     Followers,
+    twitterList,
+  },
+  created() {
+    this.fetchtwitterList();
+    this.fetchUserprofile();
+    this.fetchFollowerList();
+  },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  },
+  methods: {
+    async fetchtwitterList() {
+      try {
+        const response = await twitterAPI.TwitterAll();
+        this.twitters = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async fetchUserprofile() {
+      try {
+        const Newdata = await userAPI.getCurrentUser();
+        const userId = Newdata.data.id;
+        this.UserId = userId;
+        const response = await userAPI.UserProfile(userId);
+        this.UserProfile = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async fetchFollowerList() {
+      try {
+        const response = await followerAPI.TopUsers();
+        this.followerlist = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async afterCreateTwitter(payload) {
+      try {
+        const { Description } = payload;
+        this.twitter = Description;
+        if (this.twitter.length > 140) {
+          throw new Error("字數不可以超過140個字");
+        } else if (this.twitter.length === 0) {
+          throw new Error("不可以輸入空白");
+        }
+        const response = await twitterAPI.postTwitter({
+          description: this.twitter,
+        });
+        const { data } = response;
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.repliedTwitter = {
+          id: Math.floor(Math.random() * 100000000) + 1,
+          User: {
+            id: this.UserProfile.id,
+            account: this.UserProfile.account,
+            name: this.UserProfile.name,
+            avatar: this.UserProfile.avatar,
+          },
+          repliedCount: 0,
+          followedCount: 0,
+          createdAt: new Date(),
+          updatedAt: "",
+          isliked: false,
+          description: this.twitter,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+      this.twitter = "";
+    },
+    async handleSubmit() {
+      try {
+        if (this.twitter.length > 140) {
+          throw new Error("字數不可以超過140個字");
+        } else if (this.twitter.length === 0) {
+          throw new Error("不可以輸入空白");
+        }
+        const response = await twitterAPI.postTwitter({
+          description: this.twitter,
+        });
+        const { data } = response;
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.repliedTwitter = {
+          id: Math.floor(Math.random() * 100000000) + 1,
+          User: {
+            id: this.UserProfile.id,
+            account: this.UserProfile.account,
+            name: this.UserProfile.name,
+            avatar: this.UserProfile.avatar,
+          },
+          repliedCount: 0,
+          followedCount: 0,
+          createdAt: new Date(),
+          updatedAt: "",
+          isliked: false,
+          description: this.twitter,
+        };
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+      this.twitter = "";
+    },
   },
   data() {
     return {
       twitter: "",
+      UserId: "",
+      UserProfile: {},
+      repliedTwitter: {
+        id: -1,
+        User: {
+          id: 14,
+          account: "bmw",
+          name: "BMW",
+          email: "BMW@example.com",
+          avatar: "https://i.pravatar.cc/300",
+          cover: "https://i.pravatar.cc/300",
+          isFollowed: true,
+          introduction: "hello world!",
+          followerCount: 1,
+          followingCount: 3,
+        },
+        repliedCount: -1,
+        followedCount: -1,
+        createdAt: "",
+        updatedAt: "",
+        isliked: true,
+        description: "",
+      },
+      twitters: [],
+      followerlist: [],
     };
   },
 };
@@ -160,6 +254,7 @@ export default {
   width: 50px;
   height: 50px;
   margin: 10px auto auto 15px;
+  border-radius: 50%;
 }
 .form-group {
   margin: 0;
@@ -187,77 +282,5 @@ export default {
   position: absolute;
   top: 60px;
   right: 15px;
-}
-.twitter-cards {
-  height: calc(100%-175px);
-}
-.comments-card {
-  border-bottom: 1px #e6ecf0 solid;
-}
-.card-avater {
-  width: 50px;
-  height: 50px;
-  margin: 13px 10px auto 15px;
-}
-.content-title {
-  width: 160px;
-  height: 22px;
-}
-.content-title p {
-  margin: 10px 5px 6px 0;
-}
-.user-name {
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 15px;
-  line-height: 22px;
-  color: #1c1c1c;
-}
-.user-account {
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 22px;
-  color: #657786;
-}
-.comment-date {
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 22px;
-  color: #657786;
-}
-.content-description {
-  width: 510px;
-  height: 107px;
-}
-.content-description p {
-  margin: 10px auto 14.4px 0;
-}
-.icon-img {
-  width: 12.34px;
-  height: 12.34px;
-  margin: 0 11.35px 0 0;
-}
-.content-description .reply-count {
-  margin: 0 51px 0 0;
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 13px;
-  color: #657786;
-}
-.content-description .like-count {
-  margin: 0;
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 13px;
-  color: #657786;
 }
 </style>

@@ -7,7 +7,6 @@
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>
       </div>
-
       <div class="form-label-group mb-2">
         <input
           v-model="account"
@@ -20,7 +19,6 @@
           autofocus
         />
       </div>
-
       <div class="form-label-group mb-3">
         <input
           v-model="password"
