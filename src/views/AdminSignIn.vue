@@ -31,7 +31,7 @@
       <button class="mb-3" type="submit">登入</button>
     </form>
     <div class="link">
-      <a href="#">前台登入</a>
+      <router-link to="/signin">前台登入</router-link>
     </div>
   </div>
 </template>
