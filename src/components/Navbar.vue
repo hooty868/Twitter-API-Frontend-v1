@@ -17,11 +17,16 @@
           <h1 class="pannel-icon-text main">首頁</h1>
         </div>
       </router-link>
-
-      <div class="pannel-icon-container d-flex">
-        <img class="pannel-icon" src="/image/icon_profile.png" alt="Profile" />
-        <h1 class="pannel-icon-text">個人資料</h1>
-      </div>
+      <router-link to="/profile" class="button-link">
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="/image/icon_profile.png"
+            alt="Profile"
+          />
+          <h1 class="pannel-icon-text">個人資料</h1>
+        </div>
+      </router-link>
       <router-link
         :to="{ name: 'setting', params: { id: currentuser.id } }"
         class="button-link"

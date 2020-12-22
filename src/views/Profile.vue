@@ -14,7 +14,7 @@
         </div>
         <div class="user-info">
           <div class="background">
-            <img :src="user.cover" alt="" />
+            <img class="background" :src="user.cover" alt="" />
             <div class="avatar">
               <img :src="user.avatar" alt="" />
             </div>
@@ -123,7 +123,7 @@
         </div>
       </div>
       <div class="main-follower col-4 h-100">
-        <Followers />
+        <Followers :user-profile="user" :follower-list="followerlist" />
       </div>
     </div>
     <!-- Modal -->
@@ -150,41 +150,81 @@
               <div>
                 <p class="modal-title" id="exampleModalLabel">編輯個人資料</p>
               </div>
-              <button type="button" class="save btn btn-primary">儲存</button>
             </div>
           </div>
-          <div class="background">
-            <img :src="user.cover" alt="" />
-            <div class="avatar">
-              <img :src="user.avatar" alt="" />
-            </div>
-          </div>
-          <div class="text-input">
-            <div class="form-label-group mb-2 input-name">
-              <input
-                v-model="account"
-                id="name"
-                name="name"
-                type="name"
-                placeholder="名稱"
-                autocomplete="username"
-                required
-                autofocus
+          <form @submit.stop="handleSubmit">
+            <div class="background">
+              <img
+                class="background"
+                :src="editUser.cover ? editUser.cover : user.cover"
+                alt=""
               />
-            </div>
+              <div class="edit-icon-group">
+                <label for="cover">
+                  <input
+                    id="cover"
+                    type="file"
+                    name="cover"
+                    accept="image/*"
+                    class="form-control-file"
+                    style="display: none"
+                    @change="handleCoverChange"
+                  />
+                  <img class="edit-icon" src="/image/editImage.png" alt="" />
+                </label>
+                <img class="edit-icon" src="/image/exit.png" alt="" />
+              </div>
 
-            <div class="form-label-group mb-3 input-intro">
-              <input
-                v-model="password"
-                id="introduction"
-                name="introduction"
-                type="introduction"
-                placeholder="自我介紹"
-                autocomplete="current-password"
-                required
-              />
+              <div class="avatar">
+                <img
+                  class="modal-avatar-img"
+                  :src="editUser.avatar ? editUser.avatar : user.avatar"
+                  alt=""
+                />
+                <div class="edit-icon">
+                  <label for="avatar">
+                    <input
+                      id="avatar"
+                      type="file"
+                      name="avatar"
+                      accept="image/*"
+                      class="form-control-file"
+                      style="display: none"
+                      @change="handleAvatarChange"
+                    />
+                    <img class="edit-icon" src="/image/editImage.png" alt="" />
+                  </label>
+                </div>
+              </div>
             </div>
-          </div>
+            <div class="text-input">
+              <div class="form-label-group mb-2 input-name">
+                <input
+                  v-model="editUser.name"
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="名稱"
+                  autocomplete="username"
+                  required
+                  autofocus
+                />
+              </div>
+
+              <div class="form-label-group mb-3 input-intro">
+                <input
+                  v-model="editUser.introduction"
+                  id="introduction"
+                  name="introduction"
+                  type="text"
+                  placeholder="自我介紹"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+            </div>
+            <button type="submit" class="save btn btn-primary">儲存</button>
+          </form>
         </div>
       </div>
     </div>
@@ -194,9 +234,11 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
-// import { mapState } from "vuex";
+import followerAPI from "./../apis/followers";
 import userAPI from "../apis/user";
 import { fromNowFilter } from "./../utils/mixins";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 
 export default {
   mixins: [fromNowFilter],
@@ -206,13 +248,11 @@ export default {
   },
   data() {
     return {
-      currentUser: {
-        id: -1,
-        name: "",
-        email: "",
-        role: "",
+      editUser: {
+        cover: "",
+        avatar: "",
       },
-      user: "",
+      user: {},
       tweets: "",
       likes: "",
       showContent: {
@@ -220,17 +260,35 @@ export default {
         reply: false,
         like: false,
       },
+      followerlist: [],
     };
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
   created() {
     this.fetchUsers();
     this.fetchTweets();
     this.fetchLikes();
+    this.fetchFollowerList();
   },
   methods: {
+    async fetchFollowerList() {
+      try {
+        const response = await followerAPI.TopUsers();
+        this.followerlist = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
     async fetchUsers() {
       try {
-        const { data } = await userAPI.getUser(11);
+        const { data } = await userAPI.getUser(this.currentUser.id);
+        console.log(this.currentUser.id);
         this.user = data;
       } catch (error) {
         console.log(error);
@@ -238,7 +296,7 @@ export default {
     },
     async fetchTweets() {
       try {
-        const { data } = await userAPI.getTweets(11);
+        const { data } = await userAPI.getTweets(this.currentUser.id);
         this.tweets = data;
       } catch (error) {
         console.log(error);
@@ -246,11 +304,35 @@ export default {
     },
     async fetchLikes() {
       try {
-        const { data } = await userAPI.getLikes(11);
+        const { data } = await userAPI.getLikes(this.currentUser.id);
         console.log(data);
         this.likes = data;
       } catch (error) {
         console.log(error);
+      }
+    },
+    handleCoverChange(e) {
+      const { files } = e.target;
+
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案
+        this.editUser.cover = "";
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.editUser.cover = imageURL;
+      }
+    },
+    handleAvatarChange(e) {
+      const { files } = e.target;
+
+      if (files.length === 0) {
+        // 使用者沒有選擇上傳的檔案
+        this.editUser.avatar = "";
+      } else {
+        // 否則產生預覽圖
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.editUser.avatar = imageURL;
       }
     },
 
@@ -268,6 +350,29 @@ export default {
       this.showContent.tweets = false;
       this.showContent.reply = false;
       this.showContent.like = true;
+    },
+    async handleSubmit(e) {
+      try {
+        const form = e.target;
+        const formData = new FormData(form);
+        for (let [name, value] of formData.entries()) {
+          console.log(name + ": " + value);
+        }
+        const { data } = await userAPI.update({
+          userId: this.currentUser.id,
+          formData,
+        });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.$router.push("/profile");
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法更新資料，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -318,8 +423,7 @@ export default {
   width: 100%;
 }
 
-.user-info .background,
-.background img {
+.user-info .background {
   width: 100%;
   height: 200px;
 }
@@ -482,19 +586,6 @@ export default {
   width: 100%;
 }
 
-.header-wrapper .save {
-  background: #ff6600;
-  border-radius: 100px;
-  color: #ffffff;
-  border: none;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 64px;
-  height: 30px;
-}
-
 .header-wrapper .close {
   color: #ff6600;
   font-size: 30px;
@@ -503,6 +594,8 @@ export default {
 
 .modal-content .background {
   position: relative;
+  width: 100%;
+  height: 200px;
 }
 
 .modal-content .avatar {
@@ -518,7 +611,7 @@ export default {
   left: 14px;
 }
 
-.modal-content .avatar img {
+.modal-content .avatar .modal-avatar-img {
   width: 130px;
   height: 130px;
   border-radius: 50%;
@@ -556,5 +649,44 @@ export default {
   left: 1%;
   font-size: 0.9rem;
   color: #657786;
+}
+
+.edit-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.avatar .edit-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.background .edit-icon-group {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.background .edit-icon-group .edit-icon {
+  margin-right: 36px;
+}
+
+.modal-content form .save {
+  background: #ff6600;
+  border-radius: 100px;
+  color: #ffffff;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 30px;
+  position: absolute;
+  right: 15px;
+  top: 12px;
 }
 </style>
