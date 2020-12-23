@@ -258,7 +258,6 @@ export default {
         } else if (this.Replytwitter.length === 0) {
           throw new Error("不可以輸入空白");
         }
-        console.log(twitterId);
         const response = await twitterAPI.replyTwitter(twitterId, {
           comment: this.Replytwitter,
         });
