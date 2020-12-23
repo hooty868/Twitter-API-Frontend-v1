@@ -1,7 +1,13 @@
 <template>
-  <div class="followers-container">
+  <div
+    class="followers-container"
+    :class="{ newfollowerscontainer: cardsSpread }"
+  >
     <div class="header w-100"><p>首頁</p></div>
-    <div class="follower-cards w-100">
+    <div
+      class="follower-cards w-100"
+      :class="{ newfollowercards: cardsSpread }"
+    >
       <div
         class="follower-card w-100 d-flex"
         v-for="follower in followers"
@@ -17,6 +23,7 @@
           type="submit"
           v-if="parseInt(follower.isFollowed, 10)"
           @click.stop.prevent="deletFollower(follower.followingId)"
+          :disabled="isProcessing"
         >
           正在跟隨
         </button>
@@ -24,13 +31,16 @@
           class="btn btn-lg btn-submit nonfollowered btn-block mb-3"
           type="submit"
           @click.stop.prevent="addFollower(follower.followingId)"
+          :disabled="isProcessing"
           v-else
         >
           跟隨
         </button>
       </div>
     </div>
-    <div class="footer"><p>顯示更多</p></div>
+    <div class="footer" v-if="!cardsSpread" @click="tansferCards">
+      <p>顯示更多</p>
+    </div>
   </div>
 </template>
 
@@ -61,18 +71,28 @@ export default {
     },
   },
   methods: {
+    tansferCards() {
+      this.cardsSpread = true;
+    },
     fetchUser() {
       this.followers = this.followerList;
     },
     async addFollower(followerId) {
+      this.isProcessing = true;
       try {
         const response = await followerAPI.isFollower(followerId);
         const { data } = response;
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        const NewData = await followerAPI.TopUsers();
-        this.followers = NewData.data;
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId === followerId) {
+            follower.isFollowed = 1;
+            return follower;
+          } else {
+            return follower;
+          }
+        });
       } catch (error) {
         console.log("add", error);
         Toast.fire({
@@ -80,16 +100,27 @@ export default {
           title: error,
         });
       }
+      this.isProcessing = false;
     },
     async deletFollower(followerId) {
+      this.isProcessing = true;
       try {
         const response = await followerAPI.deletFollower(followerId);
         const { data } = response;
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        const NewData = await followerAPI.TopUsers();
-        this.followers = NewData.data;
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId === followerId) {
+            follower = {
+              ...follower,
+              isFollowed: 0,
+            };
+            return follower;
+          } else {
+            return follower;
+          }
+        });
       } catch (error) {
         console.log("delete", error);
         Toast.fire({
@@ -97,12 +128,11 @@ export default {
           title: error,
         });
       }
+      this.isProcessing = false;
     },
   },
   data() {
-    return {
-      followers: [],
-    };
+    return { isProcessing: false, followers: [], cardsSpread: false };
   },
 };
 </script>
@@ -115,6 +145,9 @@ export default {
   border-radius: 14px;
   margin: 15px auto auto 15px;
   position: relative;
+}
+.newfollowerscontainer {
+  height: 760px;
 }
 .header {
   height: 45px;
@@ -135,6 +168,9 @@ export default {
 .follower-cards {
   max-height: 425px;
   overflow-y: hidden;
+}
+.newfollowercards {
+  max-height: 701px;
 }
 .follower-card {
   background: none;

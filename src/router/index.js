@@ -55,8 +55,8 @@ const routes = [
     redirect: '/admin/signin'
   },
   {
-    path: '/twitterdetail',
-    name: 'main',
+    path: '/twitterdetail/:id',
+    name: 'twitterDetail',
     component: () => import('../views/twitterIndex.vue')
   },
   {
@@ -95,9 +95,8 @@ router.beforeEach(async (to, from, next) => {
   if (tokenInLocalStorage && tokenInLocalStorage !== tokenInStore) {
     isAuthenticated = await store.dispatch('fetchCurrentUser')
   }
-
   // 如果 token 無效則轉址到登入頁
-  if (!isAuthenticated && to.name !== 'sign-in') {
+  if (!isAuthenticated && to.name !== 'sign-in' && to.name !== 'sign-up' && to.name !== 'admin-signin') {
     next('/signin')
     return
   }

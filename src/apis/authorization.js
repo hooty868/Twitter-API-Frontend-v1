@@ -8,5 +8,15 @@ export default {
       account,
       password
     })
+  },
+  signUp({ account, name, email, password, checkPassword }) {
+    // 這裡 return 的會是一個 Promise
+    return apiHelper.post('/users', {
+      account,
+      name,
+      email,
+      password,
+      checkPassword
+    })
   }
 }

@@ -17,7 +17,7 @@
           class="form-input form-control"
           autocomplete="account"
           required
-          autofocus
+          v-focus
         />
       </div>
 
@@ -43,12 +43,8 @@
       </button>
 
       <div class="text-right d-flex justify-content-end mb-3">
-        <p>
-          <router-link to="/signup">註冊 Alphitter·</router-link>
-        </p>
-        <p>
-          <router-link to="/admin/signin">後台登入</router-link>
-        </p>
+        <router-link to="/signup"><p>註冊 Alphitter·</p></router-link>
+        <router-link to="/admin/signin"><p>後台登入</p></router-link>
       </div>
     </form>
   </div>
@@ -83,7 +79,6 @@ export default {
           password: this.password,
         });
         const { data } = response;
-        console.log(data);
         if (data.status !== "success") {
           throw new Error(data.message);
         }
@@ -103,10 +98,17 @@ export default {
       }
     },
   },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
 .form-group {
   max-width: 540px;
   margin: 0 auto 0 auto;

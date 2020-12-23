@@ -116,10 +116,10 @@ export default {
   },
   created() {
     const { id } = this.$route.params;
-    this.fetchRestaurant(id);
+    this.fetchUserProfile(id);
   },
   methods: {
-    async fetchRestaurant(userId) {
+    async fetchUserProfile(userId) {
       try {
         this.UserId = userId;
         const { data } = await userAPI.UserProfile(userId);

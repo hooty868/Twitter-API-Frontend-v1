@@ -21,14 +21,17 @@
               autocomplete="twitter"
               placeholder="有什麼新鮮事？"
               required
-              autofocus
             />
             <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
               推文
             </button>
           </form>
         </div>
-        <twitterList :replied-twitter="repliedTwitter" :Twitters="twitters" />
+        <twitterList
+          :replied-twitter="repliedTwitter"
+          :Twitters="twitters"
+          :user-profile="UserProfile"
+        />
       </div>
       <div class="main-follower col-4 h-100">
         <Followers :user-profile="UserProfile" :follower-list="followerlist" />
