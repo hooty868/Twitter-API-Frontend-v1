@@ -273,7 +273,7 @@ export default {
           title: error,
         });
       }
-      this.twitter = "";
+      this.Replytwitter = "";
     },
   },
   data() {
