@@ -55,7 +55,6 @@ export default {
       try {
         const { data } = await userAPI.getFollowing(this.currentUser.id);
         this.followers = data;
-        console.log(this.followers);
       } catch (error) {
         console.log("error", error);
         Toast.fire({

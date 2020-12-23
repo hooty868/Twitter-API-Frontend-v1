@@ -6,7 +6,7 @@
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
-          <img src="/image/arrow.png" alt="" />
+          <img @click="$router.back()" src="/image/arrow.png" alt="" />
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
             <p class="twitter">{{ user.tweetCount }}推文</p>
@@ -27,19 +27,48 @@
                 {{ user.introduction }}
               </p>
               <div class="follow-detail">
-                <router-link to="/follow" class="button-link follow-detail">
+                <router-link
+                  :to="{ name: 'follow-other', params: { id: user.id } }"
+                  class="button-link follow-detail"
+                >
                   <p>{{ user.followingCount }}個 <span>追隨中</span></p>
                   <p>{{ user.followerCount }}位 <span>追隨者</span></p>
                 </router-link>
+                <div class="edit-button" v-if="isCurrentUser">
+                  <button
+                    class="btn edit"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#edit"
+                  >
+                    編輯個人資料
+                  </button>
+                </div>
+                <div v-else class="edit row">
+                  <div class="icon-wrapper">
+                    <img src="/image/mail.png" alt="" />
+                  </div>
+                  <div class="icon-wrapper">
+                    <img src="/image/bell.png" alt="" />
+                  </div>
 
-                <button
-                  class="btn edit"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#edit"
-                >
-                  編輯個人資料
-                </button>
+                  <div>
+                    <button
+                      v-if="user.isFollowed"
+                      class="follower-btn"
+                      @click.stop.prevent="deleteFollowing(user.id)"
+                    >
+                      正在跟隨
+                    </button>
+                    <button
+                      v-else
+                      class="follow-btn"
+                      @click.stop.prevent="addFollowing(user.id)"
+                    >
+                      追隨
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -71,7 +100,12 @@
           <div class="content-render" v-if="showContent.tweets">
             <div class="card" v-for="tweet in tweets" :key="tweet.id">
               <div class="user-avatar">
-                <img class="user-avatar" :src="tweet.user.avatar" alt="" />
+                <img
+                  @click="userLink(tweet.user.id)"
+                  class="user-avatar"
+                  :src="tweet.user.avatar"
+                  alt=""
+                />
               </div>
               <div class="content">
                 <div class="detail">
@@ -98,7 +132,12 @@
           <div class="content-render" v-if="showContent.like">
             <div class="card" v-for="like in likes" :key="like.id">
               <div class="user-avatar">
-                <img class="user-avatar" :src="like.user.avatar" alt="" />
+                <img
+                  @click="userLink(like.user.id)"
+                  class="user-avatar"
+                  :src="like.user.avatar"
+                  alt=""
+                />
               </div>
               <div class="content">
                 <div class="detail">
@@ -287,16 +326,19 @@ export default {
         like: false,
       },
       followerlist: [],
+      isCurrentUser: true,
     };
   },
   computed: {
     ...mapState(["currentUser"]),
   },
   created() {
-    this.fetchUsers();
-    this.fetchTweets();
-    this.fetchLikes();
-    this.fetchReply();
+    const { id: userId } = this.$route.params;
+    this.userCheck(userId);
+    this.fetchUsers(userId);
+    this.fetchTweets(userId);
+    this.fetchLikes(userId);
+    this.fetchReply(userId);
     this.fetchFollowerList();
   },
   methods: {
@@ -312,37 +354,69 @@ export default {
         });
       }
     },
-    async fetchUsers() {
+    async fetchUsers(userId) {
       try {
-        const { data } = await userAPI.getUser(this.currentUser.id);
+        const { data } = await userAPI.getUser(userId);
 
         this.user = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchTweets() {
+    async fetchTweets(userId) {
       try {
-        const { data } = await userAPI.getTweets(this.currentUser.id);
+        const { data } = await userAPI.getTweets(userId);
         this.tweets = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchLikes() {
+    async fetchLikes(userId) {
       try {
-        const { data } = await userAPI.getLikes(this.currentUser.id);
+        const { data } = await userAPI.getLikes(userId);
         this.likes = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchReply() {
+    async fetchReply(userId) {
       try {
-        const { data } = await userAPI.getReply(this.currentUser.id);
+        const { data } = await userAPI.getReply(userId);
         this.replies = data;
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async deleteFollowing(userId) {
+      try {
+        const { data } = await userAPI.deleteFollowing(userId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.user.isFollowed = 0;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤，請稍後再試",
+        });
+      }
+    },
+    async addFollowing(userId) {
+      try {
+        const { data } = await userAPI.addFollowing(userId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.user.isFollowed = 1;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法追蹤，請稍後再試",
+        });
       }
     },
     handleCoverChange(e) {
@@ -385,6 +459,16 @@ export default {
       this.showContent.reply = false;
       this.showContent.like = true;
     },
+    userLink(userId) {
+      this.$router.push({ name: "profile-other", params: { id: userId } });
+    },
+    userCheck(userId) {
+      if (Number(userId) === this.currentUser.id) {
+        return (this.isCurrentUser = true);
+      } else {
+        this.isCurrentUser = false;
+      }
+    },
     async handleSubmit(e) {
       try {
         const form = e.target;
@@ -407,6 +491,14 @@ export default {
         });
       }
     },
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id: userId } = to.params;
+    this.userCheck(userId);
+    this.fetchUsers(userId);
+    this.fetchTweets(userId);
+    this.fetchLikes(userId);
+    next();
   },
 };
 </script>
@@ -514,7 +606,7 @@ export default {
   color: #657786;
 }
 
-.detail button {
+.detail .edit-button .edit {
   width: 122px;
   height: 40px;
   border: 1px solid #ff6600;
@@ -523,6 +615,45 @@ export default {
   border-radius: 100px;
   position: absolute;
   right: 15px;
+  top: 10px;
+}
+
+.detail .edit .icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.detail .edit .follow-btn {
+  width: 122px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  background: white;
+  color: #ff6600;
+  border-radius: 100px;
+  font-weight: bold;
+  outline: none;
+}
+
+.detail .edit .follower-btn {
+  width: 122px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  background: #ff6600;
+  color: #fff;
+  border-radius: 100px;
+  font-weight: bold;
+  outline: none;
+}
+
+.detail .edit {
+  position: absolute;
+  right: 30px;
   top: 10px;
 }
 

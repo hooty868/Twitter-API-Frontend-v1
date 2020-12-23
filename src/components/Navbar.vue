@@ -17,7 +17,10 @@
           <h1 class="pannel-icon-text main">首頁</h1>
         </div>
       </router-link>
-      <router-link to="/profile" class="button-link">
+      <router-link
+        :to="{ name: 'profile', params: { id: currentuser.id } }"
+        class="button-link"
+      >
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
