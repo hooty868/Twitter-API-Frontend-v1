@@ -4,7 +4,7 @@
       <div class="setting-pannel col-3 h-100">
         <Navbar
           @after-create-twitter="afterCreateTwitter"
-          :user-profile="UserProfile"
+          :navbar-status="status"
         />
       </div>
       <div class="main-content col h-100">
@@ -27,14 +27,21 @@
             </button>
           </form>
         </div>
+        <Spinner v-if="isLoading" />
         <twitterList
           :replied-twitter="repliedTwitter"
           :Twitters="twitters"
           :user-profile="UserProfile"
+          v-else
         />
       </div>
       <div class="main-follower col-4 h-100">
-        <Followers :user-profile="UserProfile" :follower-list="followerlist" />
+        <Spinner v-if="isLoading" />
+        <Followers
+          :user-profile="UserProfile"
+          :follower-list="followerlist"
+          v-else
+        />
       </div>
     </div>
   </div>
@@ -44,6 +51,7 @@
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
 import twitterList from "./../components/twitterList";
+import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import userAPI from "./../apis/users";
 import followerAPI from "./../apis/followers";
@@ -52,6 +60,7 @@ import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
+    Spinner,
     Navbar,
     Followers,
     twitterList,
@@ -96,7 +105,9 @@ export default {
       try {
         const response = await followerAPI.TopUsers();
         this.followerlist = response.data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("error", error);
         Toast.fire({
           icon: "warning",
@@ -188,6 +199,8 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
+      status: "status1",
       twitter: "",
       UserId: "",
       UserProfile: {},

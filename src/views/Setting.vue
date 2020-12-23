@@ -1,9 +1,10 @@
 <template>
   <div class="container d-flex">
     <div class="setting-pannel">
-      <Navbar />
+      <Navbar :navbar-status="status" />
     </div>
-    <div class="main-content">
+    <Spinner v-if="isLoading" />
+    <div class="main-content" v-else>
       <div class="header"><p>帳戶設定</p></div>
       <form
         class="form-group w-100"
@@ -94,15 +95,19 @@
 
 <script>
 import Navbar from "./../components/Navbar";
+import Spinner from "./../components/Spinner";
 import userAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
   components: {
+    Spinner,
     Navbar,
   },
   data() {
     return {
+      isLoading: true,
+      status: "status3",
       userProfile: {
         account: "",
         name: "",
@@ -131,7 +136,9 @@ export default {
           password: "",
           checkPassword: "",
         };
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         this.isProcessing = false;
         Toast.fire({
           icon: "error",

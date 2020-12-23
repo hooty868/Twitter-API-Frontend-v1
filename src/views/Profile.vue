@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row h-100">
       <div class="setting-pannel col-3 h-100">
-        <Navbar />
+        <Navbar :navbar-status="status" />
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
@@ -273,6 +273,7 @@ export default {
   },
   data() {
     return {
+      status: "status2",
       editUser: {
         cover: "",
         avatar: "",

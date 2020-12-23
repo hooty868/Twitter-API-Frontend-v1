@@ -398,6 +398,10 @@ export default {
   line-height: 13px;
   color: #e0245e;
 }
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
+}
 /* Modal  */
 .modal-content {
   width: 600px;

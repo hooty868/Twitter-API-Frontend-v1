@@ -168,4 +168,8 @@ export default {
   line-height: 22px;
   color: #1c1c1c;
 }
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
+}
 </style>
