@@ -34,7 +34,7 @@
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/icon_setting.png"
+            src="/image/current_setting.png"
             alt="Setting"
           />
           <h1 class="pannel-icon-text setting">設定</h1>
@@ -85,7 +85,7 @@
                   autocomplete="twitter"
                   placeholder="有什麼新鮮事？"
                   required
-                  autofocus
+                  v-focus
                 />
                 <button
                   class="btn btn-lg btn-twitter btn-block mb-3"
@@ -144,11 +144,19 @@ export default {
       this.$emit("after-create-twitter", {
         Description: this.twitter,
       });
+      location.reload();
       this.twitter = "";
     },
     logout() {
       this.$store.commit("revokeAuthentication");
       this.$router.push("/signin");
+    },
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
     },
   },
 };
@@ -197,7 +205,7 @@ export default {
   margin: auto 0 auto 20px;
 }
 .main {
-  color: #ff6600;
+  color: black;
 }
 .btn-submit {
   height: 45px;

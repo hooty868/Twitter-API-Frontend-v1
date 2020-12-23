@@ -18,7 +18,7 @@
           placeholder=""
           autocomplete="account"
           required
-          autofocus
+          v-focus
         />
       </div>
       <div class="form-label-group">
@@ -31,8 +31,7 @@
           class="form-input form-control"
           placeholder=""
           autocomplete="username"
-          required
-          autofocus
+          requiredx
         />
       </div>
 
@@ -129,10 +128,11 @@ export default {
         }
 
         const checkData = {
+          account: this.account,
           name: this.name,
           email: this.email,
           password: this.password,
-          passwordCheck: this.passwordCheck,
+          checkPassword: this.passwordCheck,
         };
         let { data } = await authorizationAPI.signUp(checkData);
         if (data.status === "error") {
@@ -150,6 +150,13 @@ export default {
           title: `無法註冊 - ${e.message}`,
         });
       }
+    },
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
     },
   },
 };
