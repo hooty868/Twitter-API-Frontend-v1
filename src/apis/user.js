@@ -18,6 +18,31 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getReply(userId) {
+    return apiHelper.get(`/users/${userId}/replied_tweets`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getFollower(userId) {
+    return apiHelper.get(`/users/${userId}/followers`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getFollowing(userId) {
+    return apiHelper.get(`/users/${userId}/followings`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  addFollowing(followerId) {
+    return apiHelper.post(`/followships`, { id: followerId }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  deleteFollowing(followerId) {
+    return apiHelper.delete(`/followships/${followerId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   update({ userId, formData }) {
     return apiHelper.put(`/users/${userId}`, formData, {
       headers: { Authorization: `Bearer ${getToken()}` }

@@ -9,7 +9,7 @@
           <img src="/image/arrow.png" alt="" />
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
-            <p class="twitter">25推文</p>
+            <p class="twitter">{{ user.tweetCount }}推文</p>
           </div>
         </div>
         <div class="user-info">
@@ -27,9 +27,11 @@
                 {{ user.introduction }}
               </p>
               <div class="follow-detail">
-                <p>{{ user.followingCount }}個 <span>追隨中</span></p>
-                <p>{{ user.followerCount }}位 <span>追隨者</span></p>
-                <div />
+                <router-link to="/follow" class="button-link follow-detail">
+                  <p>{{ user.followingCount }}個 <span>追隨中</span></p>
+                  <p>{{ user.followerCount }}位 <span>追隨者</span></p>
+                </router-link>
+
                 <button
                   class="btn edit"
                   type="button"
@@ -120,6 +122,29 @@
               </div>
             </div>
           </div>
+          <div class="content-render" v-if="showContent.reply">
+            <div class="card" v-for="reply in replies" :key="reply.id">
+              <div class="user-avatar">
+                <img
+                  class="user-avatar"
+                  :src="reply.Tweet.User.avatar"
+                  alt=""
+                />
+              </div>
+              <div class="content">
+                <div class="detail">
+                  <div class="name mr-1">{{ reply.Tweet.User.name }}</div>
+                  <div class="account mr-1">
+                    @{{ reply.Tweet.User.account }}・
+                  </div>
+                  <div class="creat-time">{{ reply.createdAt | fromNow }}</div>
+                </div>
+                <div class="tweet">
+                  {{ reply.comment }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="main-follower col-4 h-100">
@@ -152,7 +177,7 @@
               </div>
             </div>
           </div>
-          <form @submit.stop="handleSubmit">
+          <form @submit.stop.prevent="handleSubmit">
             <div class="background">
               <img
                 class="background"
@@ -255,6 +280,7 @@ export default {
       user: {},
       tweets: "",
       likes: "",
+      replies: "",
       showContent: {
         tweets: true,
         reply: false,
@@ -270,6 +296,7 @@ export default {
     this.fetchUsers();
     this.fetchTweets();
     this.fetchLikes();
+    this.fetchReply();
     this.fetchFollowerList();
   },
   methods: {
@@ -288,7 +315,7 @@ export default {
     async fetchUsers() {
       try {
         const { data } = await userAPI.getUser(this.currentUser.id);
-        console.log(this.currentUser.id);
+
         this.user = data;
       } catch (error) {
         console.log(error);
@@ -305,8 +332,15 @@ export default {
     async fetchLikes() {
       try {
         const { data } = await userAPI.getLikes(this.currentUser.id);
-        console.log(data);
         this.likes = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchReply() {
+      try {
+        const { data } = await userAPI.getReply(this.currentUser.id);
+        this.replies = data;
       } catch (error) {
         console.log(error);
       }
@@ -355,9 +389,8 @@ export default {
       try {
         const form = e.target;
         const formData = new FormData(form);
-        for (let [name, value] of formData.entries()) {
-          console.log(name + ": " + value);
-        }
+        console.log(formData);
+
         const { data } = await userAPI.update({
           userId: this.currentUser.id,
           formData,
@@ -366,7 +399,7 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        this.$router.push("/profile");
+        // this.$router.push("/profile");
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -474,6 +507,7 @@ export default {
 .follow-detail p {
   font-weight: bold;
   margin-right: 20px;
+  color: black;
 }
 
 .follow-detail span {
@@ -517,6 +551,10 @@ export default {
   border-bottom: 2px solid #ff6600;
 }
 
+.content-render {
+  max-height: 600px;
+  overflow-y: scroll;
+}
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;

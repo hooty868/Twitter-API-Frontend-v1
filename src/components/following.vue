@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card" v-for="follower in followers" :key="follower.id">
+    <div class="card" v-for="follower in followers" :key="follower.followingId">
       <div class="user-avatar">
         <img class="avatar" :src="follower.avatar" alt="" />
       </div>
@@ -13,36 +13,37 @@
           </div>
         </div>
       </div>
-      <button v-if="follower.isFollowed" class="follower-btn">正在跟隨</button>
-      <button v-else class="follow-btn">追隨</button>
+      <button
+        v-if="follower.isFollowed"
+        class="follower-btn"
+        @click.stop.prevent="deleteFollowing(follower.followingId)"
+      >
+        正在跟隨
+      </button>
+      <button
+        v-else
+        @click.stop.prevent="addFollowing(follower.followingId)"
+        class="follow-btn"
+      >
+        追隨
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-const dummyData = [
-  {
-    followerId: 2,
-    name: "user1",
-    account: "user1",
-    avatar: "https://loremflickr.com/320/240/corgi?lock=40",
-    introduction: "Et id quae sed.",
-    isFollowed: 1,
-  },
-  {
-    followerId: 3,
-    name: "test!",
-    account: "user2",
-    avatar: "https://loremflickr.com/320/240/corgi?lock=38.779509448635196",
-    introduction: "test intro111",
-    isFollowed: 1,
-  },
-];
+import userAPI from "../apis/user";
+import { Toast } from "./../utils/helpers";
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
       followers: [],
     };
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
 
   created() {
@@ -50,8 +51,68 @@ export default {
   },
 
   methods: {
-    fetchData() {
-      this.followers = dummyData;
+    async fetchData() {
+      try {
+        const { data } = await userAPI.getFollowing(this.currentUser.id);
+        this.followers = data;
+        console.log(this.followers);
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async deleteFollowing(followerId) {
+      try {
+        const { data } = await userAPI.deleteFollowing(followerId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId !== followerId) {
+            return follower;
+          } else {
+            return {
+              ...follower,
+              isFollowed: 0,
+            };
+          }
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤，請稍後再試",
+        });
+      }
+    },
+    async addFollowing(followerId) {
+      try {
+        const { data } = await userAPI.addFollowing(followerId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId !== followerId) {
+            return follower;
+          } else {
+            return {
+              ...follower,
+              isFollowed: 1,
+            };
+          }
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法追蹤，請稍後再試",
+        });
+      }
     },
   },
 };
@@ -90,6 +151,7 @@ export default {
   position: absolute;
   right: 15px;
   top: 11px;
+  outline: none;
 }
 
 .card .follow-btn {
@@ -102,6 +164,7 @@ export default {
   position: absolute;
   right: 15px;
   top: 11px;
+  outline: none;
 }
 
 .card .detail .name {

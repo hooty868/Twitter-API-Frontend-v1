@@ -45,7 +45,7 @@ const routes = [
     component: () => import('../views/ProfileOther.vue')
   },
   {
-    path: '/follow/',
+    path: '/follow',
     name: 'follow-other',
     component: () => import('../views/follow.vue')
   },
