@@ -37,7 +37,20 @@
                   <div class="icon-wrapper">
                     <img src="/image/bell.png" alt="" />
                   </div>
-                  <button class="btn">編輯個人資料</button>
+                  <button
+                    v-if="user.isFollowed"
+                    class="follower-btn"
+                    @click.stop.prevent="deleteFollowing(user.id)"
+                  >
+                    正在跟隨
+                  </button>
+                  <button
+                    v-else
+                    class="follow-btn"
+                    @click.stop.prevent="addFollowing(user.id)"
+                  >
+                    追隨
+                  </button>
                 </div>
               </div>
             </div>
@@ -121,10 +134,33 @@
               </div>
             </div>
           </div>
+          <div class="content-render" v-if="showContent.reply">
+            <div class="card" v-for="reply in replies" :key="reply.id">
+              <div class="user-avatar">
+                <img
+                  class="user-avatar"
+                  :src="reply.Tweet.User.avatar"
+                  alt=""
+                />
+              </div>
+              <div class="content">
+                <div class="detail">
+                  <div class="name mr-1">{{ reply.Tweet.User.name }}</div>
+                  <div class="account mr-1">
+                    @{{ reply.Tweet.User.account }}・
+                  </div>
+                  <div class="creat-time">{{ reply.createdAt | fromNow }}</div>
+                </div>
+                <div class="tweet">
+                  {{ reply.comment }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="main-follower col-4 h-100">
-        <Followers />
+        <Followers :user-profile="user" :follower-list="followerlist" />
       </div>
     </div>
   </div>
@@ -133,9 +169,11 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
-// import { mapState } from "vuex";
 import userAPI from "../apis/user";
+import followerAPI from "./../apis/followers";
 import { fromNowFilter } from "./../utils/mixins";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 
 export default {
   mixins: [fromNowFilter],
@@ -143,51 +181,73 @@ export default {
     Navbar,
     Followers,
   },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
   data() {
     return {
-      currentUser: {
-        id: -1,
-        name: "",
-        email: "",
-        role: "",
-      },
-      user: "",
+      user: {},
       tweets: "",
       likes: "",
+      replies: "",
       showContent: {
         tweets: true,
         reply: false,
         like: false,
       },
+      followerlist: [],
     };
   },
   created() {
-    this.fetchUsers();
-    this.fetchTweets();
-    this.fetchLikes();
+    const { id: userId } = this.$route.params;
+    this.fetchUsers(userId);
+    this.fetchTweets(userId);
+    this.fetchLikes(userId);
+    this.fetchReply(userId);
   },
   methods: {
-    async fetchUsers() {
+    async fetchFollowerList() {
       try {
-        const { data } = await userAPI.getUser(11);
+        const response = await followerAPI.TopUsers();
+        this.followerlist = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async fetchUsers(userId) {
+      try {
+        console.log(userId);
+        const { data } = await userAPI.getUser(userId);
         this.user = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchTweets() {
+    async fetchTweets(userId) {
       try {
-        const { data } = await userAPI.getTweets(11);
+        const { data } = await userAPI.getTweets(userId);
         this.tweets = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchLikes() {
+    async fetchLikes(userId) {
       try {
-        const { data } = await userAPI.getLikes(11);
+        const { data } = await userAPI.getLikes(userId);
         console.log(data);
         this.likes = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchReply(userId) {
+      try {
+        const { data } = await userAPI.getReply(userId);
+        this.replies = data;
       } catch (error) {
         console.log(error);
       }
@@ -208,6 +268,44 @@ export default {
       this.showContent.reply = false;
       this.showContent.like = true;
     },
+    async deleteFollowing(userId) {
+      try {
+        const { data } = await userAPI.deleteFollowing(userId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.user.isFollowed = 0;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤，請稍後再試",
+        });
+      }
+    },
+    async addFollowing(userId) {
+      try {
+        const { data } = await userAPI.addFollowing(userId);
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.user.isFollowed = 1;
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法追蹤，請稍後再試",
+        });
+      }
+    },
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id: userId } = to.params;
+    this.fetchUsers(userId);
+    this.fetchTweets(userId);
+    this.fetchLikes(userId);
+    next();
   },
 };
 </script>
@@ -321,13 +419,26 @@ export default {
   top: 10px;
 }
 
-.detail button {
+.detail .follower-btn {
   width: 122px;
   height: 40px;
   border: 1px solid #ff6600;
-  color: #ff6600;
-  font-weight: bold;
+  background: #ff6600;
+  color: #fff;
   border-radius: 100px;
+  font-weight: bold;
+  outline: none;
+}
+
+.detail .follow-btn {
+  width: 122px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  background: white;
+  color: #ff6600;
+  border-radius: 100px;
+  font-weight: bold;
+  outline: none;
 }
 
 .detail .edit .icon-wrapper {
@@ -364,6 +475,10 @@ export default {
 .content-control .active {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
+}
+.content-render {
+  max-height: 600px;
+  overflow-y: scroll;
 }
 
 .card {

@@ -6,10 +6,12 @@
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
-          <img src="/image/arrow.png" alt="" />
+          <router-link to="/profile" class="button-link">
+            <img src="/image/arrow.png" alt="" />
+          </router-link>
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
-            <p class="twitter">25推文</p>
+            <p class="twitter">{{ user.tweetCount }}推文推文</p>
           </div>
         </div>
 
@@ -18,14 +20,14 @@
             <div
               class="tweets content"
               v-bind:class="{ active: showContent.follower }"
-              v-on:click="showTweets()"
+              v-on:click="showfollower()"
             >
               跟隨者
             </div>
             <div
               class="response content"
               v-bind:class="{ active: showContent.following }"
-              v-on:click="showReply()"
+              v-on:click="showfollowing()"
             >
               正在跟隨
             </div>
@@ -48,9 +50,10 @@ import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
 import Follower from "./../components/follower";
 import Following from "./../components/following";
-// import { mapState } from "vuex";
 import userAPI from "../apis/user";
 import { fromNowFilter } from "./../utils/mixins";
+import { mapState } from "vuex";
+import { Toast } from "./../utils/helpers";
 
 export default {
   mixins: [fromNowFilter],
@@ -63,20 +66,15 @@ export default {
   data() {
     return {
       isFollowed: true,
-      currentUser: {
-        id: -1,
-        name: "",
-        email: "",
-        role: "",
-      },
-      user: "",
-      tweets: "",
-      likes: "",
+      user: {},
       showContent: {
         follower: true,
         following: false,
       },
     };
+  },
+  computed: {
+    ...mapState(["currentUser"]),
   },
   created() {
     this.fetchUsers();
@@ -86,35 +84,22 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const { data } = await userAPI.getUser(11);
+        const { data } = await userAPI.getUser(this.currentUser.id);
         this.user = data;
       } catch (error) {
-        console.log(error);
-      }
-    },
-    async fetchTweets() {
-      try {
-        const { data } = await userAPI.getTweets(11);
-        this.tweets = data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async fetchLikes() {
-      try {
-        const { data } = await userAPI.getLikes(11);
-        console.log(data);
-        this.likes = data;
-      } catch (error) {
-        console.log(error);
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
       }
     },
 
-    showTweets() {
+    showfollower() {
       this.showContent.follower = true;
       this.showContent.following = false;
     },
-    showReply() {
+    showfollowing() {
       this.showContent.follower = false;
       this.showContent.following = true;
     },
