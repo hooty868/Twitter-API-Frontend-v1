@@ -253,14 +253,13 @@ export default {
     },
     async replytwitter(twitterId) {
       try {
-        if (this.twitter.length > 140) {
+        if (this.Replytwitter.length > 140) {
           throw new Error("字數不可以超過140個字");
-        } else if (this.twitter.length === 0) {
+        } else if (this.Replytwitter.length === 0) {
           throw new Error("不可以輸入空白");
         }
-        console.log(twitterId);
         const response = await twitterAPI.replyTwitter(twitterId, {
-          comment: this.twitter,
+          comment: this.Replytwitter,
         });
         const { data } = response;
         if (data.status !== "success") {

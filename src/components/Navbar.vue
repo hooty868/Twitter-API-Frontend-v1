@@ -144,7 +144,6 @@ export default {
       this.$emit("after-create-twitter", {
         Description: this.twitter,
       });
-      location.reload();
       this.twitter = "";
     },
     logout() {

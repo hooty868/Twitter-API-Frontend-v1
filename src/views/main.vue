@@ -136,6 +136,7 @@ export default {
           isliked: false,
           description: this.twitter,
         };
+        location.reload();
       } catch (error) {
         console.log("error", error);
         Toast.fire({
