@@ -6,25 +6,48 @@
           <img class="logo" src="/image/Logo.png" alt="Logo" />
         </router-link>
       </div>
-
       <router-link to="/main" class="button-link">
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
             src="/image/CurrentMainIcon.png"
             alt="Index"
+            v-if="status === 'status1'"
           />
-          <h1 class="pannel-icon-text main">首頁</h1>
+          <img
+            class="pannel-icon"
+            src="/image/icon_index.png"
+            alt="Index"
+            v-else
+          />
+          <h1
+            class="pannel-icon-text main"
+            :class="{ colorOrange: status === 'status1' }"
+          >
+            首頁
+          </h1>
         </div>
       </router-link>
       <router-link to="/profile" class="button-link">
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
+            src="/image/icon_profile_orange.png"
+            alt="Profile"
+            v-if="status === 'status2'"
+          />
+          <img
+            class="pannel-icon"
             src="/image/icon_profile.png"
             alt="Profile"
+            v-else
           />
-          <h1 class="pannel-icon-text">個人資料</h1>
+          <h1
+            class="pannel-icon-text"
+            :class="{ colorOrange: status === 'status2' }"
+          >
+            個人資料
+          </h1>
         </div>
       </router-link>
       <router-link
@@ -36,10 +59,23 @@
             class="pannel-icon"
             src="/image/current_setting.png"
             alt="Setting"
+            v-if="status === 'status3'"
           />
-          <h1 class="pannel-icon-text setting">設定</h1>
+          <img
+            class="pannel-icon"
+            src="/image/setting_icon_origin.png"
+            alt="Setting"
+            v-else
+          />
+          <h1
+            class="pannel-icon-text setting"
+            :class="{ colorOrange: status === 'status3' }"
+          >
+            設定
+          </h1>
         </div>
       </router-link>
+
       <!-- Button trigger modal -->
       <button
         type="button"
@@ -114,12 +150,31 @@ import userAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
+  props: {
+    navbarStatus: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       twitter: "",
       UserId: "",
-      currentuser: {},
+      currentuser: {
+        account: "",
+        avatar: "",
+        cover: "",
+        email: "",
+        followerCount: -1,
+        followingCount: -1,
+        id: -1,
+        introduction: "",
+        isFollowed: -1,
+        name: "",
+        tweetCount: -1,
+      },
       isAuthenticated: false,
+      status: "",
     };
   },
   created() {
@@ -127,6 +182,7 @@ export default {
   },
   methods: {
     async fetchUser() {
+      this.status = this.navbarStatus;
       try {
         const Newdata = await userAPI.getCurrentUser();
         const userId = Newdata.data.id;
@@ -162,6 +218,9 @@ export default {
 </script>
 
 <style scoped>
+.colorOrange {
+  color: #ff6600 !important;
+}
 .navbar {
   height: 100%;
   width: 235px;
