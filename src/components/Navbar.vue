@@ -57,10 +57,7 @@
           </h1>
         </div>
       </router-link>
-      <router-link
-        :to="{ name: 'setting', params: { id: currentuser.id } }"
-        class="button-link"
-      >
+      <router-link :to="{ name: 'setting' }" class="button-link">
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
@@ -107,7 +104,7 @@
             <div class="header">
               <img
                 class="cancle-icon"
-                src="/image/cancle_icon.png"
+                src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
                 alt="cancle"
                 data-dismiss="modal"
               />
@@ -170,7 +167,7 @@ export default {
   data() {
     return {
       twitter: "",
-      UserId: "",
+      UserId: "-1",
       currentuser: {
         account: "",
         avatar: "",

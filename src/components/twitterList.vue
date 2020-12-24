@@ -9,10 +9,10 @@
         class="card-avater"
         :src="twitter.User.avatar"
         alt="avater"
-        @click="twitterLink(twitter.id)"
+        @click="profileLink(twitter.UserId)"
       />
       <div class="card-content flex-grow-1">
-        <div class="content-title d-flex" @click="twitterLink(twitter.id)">
+        <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
           <p class="comment-date">3小時</p>
@@ -199,6 +199,9 @@ export default {
         }
       });
       this.twitterDetail = twitter[0];
+    },
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
     },
     twitterLink(twitterId) {
       this.$router.push({ name: "twitterDetail", params: { id: twitterId } });
