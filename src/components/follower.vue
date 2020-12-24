@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div class="card" v-for="follower in followers" :key="follower.id">
+    <div class="card" v-for="follower in followers" :key="follower.followerId">
       <div class="user-avatar">
-        <img class="avatar" :src="follower.avatar" alt="" />
+        <img
+          @click="userLink(follower.followerId)"
+          class="avatar"
+          :src="follower.avatar"
+          alt=""
+        />
       </div>
       <div class="content">
         <div class="detail">
@@ -112,6 +117,10 @@ export default {
           title: "無法追蹤，請稍後再試",
         });
       }
+    },
+    userLink(userId) {
+      console.log(userId);
+      this.$router.push({ name: "profile", params: { id: userId } });
     },
   },
 };

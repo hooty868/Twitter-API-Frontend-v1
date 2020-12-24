@@ -26,7 +26,7 @@
         </router-link>
       </div>
       <div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" @click="logout">
           <img class="pannel-icon m-3" src="/image/logout@2x.png" alt="Index" />
           <a href="#" class="text-center text-dark">登出</a>
         </div>
@@ -89,9 +89,6 @@ export default {
         });
       }
     },
-    // deleteTweets(tweetId) {
-    //   this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId);
-    // },
     async deleteTweets(tweetId) {
       try {
         const { data } = await adminAPI.tweets.delete({ tweetId });
@@ -108,6 +105,10 @@ export default {
         });
         console.log("error", error);
       }
+    },
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/admin/signin");
     },
   },
   filters: {
