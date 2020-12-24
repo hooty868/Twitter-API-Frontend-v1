@@ -67,12 +67,13 @@ export default {
   created() {
     this.fetchUser();
   },
+  // updated() {
+  //   console.log("componemnt updated");
+  //   this.fetchUser();
+  // },
   watch: {
     followerList(newValue) {
-      this.followers = {
-        ...this.followers,
-        ...newValue,
-      };
+      this.followers = newValue;
     },
   },
   methods: {
@@ -93,8 +94,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        // const NewResponse = await followerAPI.TopUsers();
-        // this.followers = NewResponse.data;
         this.followers = this.followers.map((follower) => {
           if (follower.followingId === followerId) {
             follower = {
@@ -108,7 +107,7 @@ export default {
         });
         this.isProcessing = true;
       } catch (error) {
-        console.log("add", error);
+        console.log("erroe:", error);
         Toast.fire({
           icon: "warning",
           title: error,

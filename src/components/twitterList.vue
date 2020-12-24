@@ -15,7 +15,7 @@
         <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
-          <p class="comment-date">3小時</p>
+          <p class="comment-date">{{ twitter.createdAt | fromNow }}</p>
         </div>
         <div class="content-description">
           <p class="content-text w-100" @click="twitterLink(twitter.id)">
@@ -99,7 +99,8 @@
                 <div class="description-head">
                   <p class="head-name">{{ twitterDetail.User.name }}</p>
                   <p class="head-account-time">
-                    @{{ twitterDetail.User.account }} · 3小時
+                    @{{ twitterDetail.User.account }} ·
+                    {{ twitterDetail.createdAt | fromNow }}
                   </p>
                 </div>
                 <div class="description-content">
@@ -154,8 +155,10 @@
 <script>
 import twitterAPI from "./../apis/twitter";
 import { Toast } from "./../utils/helpers";
+import { fromNowFilter } from "./../utils/mixins";
 
 export default {
+  mixins: [fromNowFilter],
   props: {
     repliedTwitter: {
       type: Object,
@@ -462,7 +465,7 @@ export default {
 .content-description .description-head .head-account-time {
   margin: 0;
   margin-left: 5px;
-  width: 112px;
+  width: 480px;
   height: 22px;
   font-family: Noto Sans TC;
   font-style: normal;

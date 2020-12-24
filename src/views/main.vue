@@ -93,7 +93,9 @@ export default {
         this.UserId = userId;
         const response = await userAPI.UserProfile(userId);
         this.UserProfile = response.data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("error", error);
         Toast.fire({
           icon: "warning",
@@ -107,7 +109,6 @@ export default {
         this.followerlist = response.data;
         this.isLoading = false;
       } catch (error) {
-        this.isLoading = false;
         console.log("error", error);
         Toast.fire({
           icon: "warning",

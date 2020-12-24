@@ -15,7 +15,7 @@
         <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
-          <p class="comment-date">3小時</p>
+          <p class="comment-date">{{ twitter.createdAt | fromNow }}</p>
         </div>
         <div class="content-description-reply d-flex">
           <p class="content-text">回覆</p>
@@ -34,10 +34,10 @@
 </template>
 
 <script>
-// import twitterAPI from "./../apis/twitter";
-// import { Toast } from "./../utils/helpers";
+import { fromNowFilter } from "./../utils/mixins";
 
 export default {
+  mixins: [fromNowFilter],
   props: {
     userProfile: {
       type: Object,

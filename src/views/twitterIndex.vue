@@ -17,9 +17,13 @@
           />
           <p>推文</p>
         </div>
-        <div class="twitter-bar d-flex flex-column w-100">
+        <Spinner v-if="isLoading" />
+        <div class="twitter-bar d-flex flex-column w-100" v-else>
           <div class="twitter-bar-container">
-            <div class="profile-detail-bar d-flex">
+            <div
+              class="profile-detail-bar d-flex"
+              @click="profileLink(UserProfile.UserId)"
+            >
               <img
                 class="profile-avater"
                 :src="UserProfile.User.avatar"
@@ -38,8 +42,9 @@
               </p>
             </div>
             <div class="reply-time flex-gr1 d-flex w-100">
-              <p class="content-text">上午 10:05・</p>
-              <p class="content-text">2020年6月10日</p>
+              <p class="content-text">
+                {{ UserProfile.createdAt | timeFormat }}
+              </p>
             </div>
             <div class="function-bar flex-gr1 d-flex w-100">
               <p class="content-text num-bd">
@@ -167,14 +172,18 @@
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
 import replyList from "./../components/replyList";
+import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import followerAPI from "./../apis/followers";
 import userAPI from "./../apis/users";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
+import { timeFormat } from "./../utils/mixins";
 
 export default {
+  mixins: [timeFormat],
   components: {
+    Spinner,
     Navbar,
     Followers,
     replyList,
@@ -190,6 +199,9 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     async fetchUser() {
       try {
         const Newdata = await userAPI.getCurrentUser();
@@ -254,7 +266,9 @@ export default {
       try {
         const response = await twitterAPI.getTwitterDetail(id);
         this.UserProfile = response.data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("error", error);
         Toast.fire({
           icon: "warning",
@@ -354,6 +368,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       isProcessing: false,
       twitter: "",
       UserId: "",
