@@ -32,6 +32,11 @@
                   class="button-link follow-detail"
                 >
                   <p>{{ user.followingCount }}個 <span>追隨中</span></p>
+                </router-link>
+                <router-link
+                  :to="{ name: 'follow-other', params: { id: user.id } }"
+                  class="button-link follow-detail"
+                >
                   <p>{{ user.followerCount }}位 <span>追隨者</span></p>
                 </router-link>
                 <div class="edit-button" v-if="isCurrentUser">
@@ -49,7 +54,12 @@
                     <img src="/image/mail.png" alt="" />
                   </div>
                   <div class="icon-wrapper">
-                    <img src="/image/bell.png" alt="" />
+                    <img
+                      v-if="user.isFollowed"
+                      src="/image/bellChecked.png"
+                      alt=""
+                    />
+                    <img v-else src="/image/bell.png" alt="" />
                   </div>
 
                   <div>
@@ -165,6 +175,7 @@
             <div class="card" v-for="reply in replies" :key="reply.id">
               <div class="user-avatar">
                 <img
+                  @click="userLink(reply.Tweet.User.id)"
                   class="user-avatar"
                   :src="reply.Tweet.User.avatar"
                   alt=""
@@ -264,7 +275,7 @@
             <div class="text-input">
               <div class="form-label-group mb-2 input-name">
                 <input
-                  v-model="editUser.name"
+                  v-model="user.name"
                   id="name"
                   name="name"
                   type="text"
@@ -276,15 +287,15 @@
               </div>
 
               <div class="form-label-group mb-3 input-intro">
-                <input
-                  v-model="editUser.introduction"
-                  id="introduction"
+                <textarea
+                  v-model="user.introduction"
                   name="introduction"
-                  type="text"
-                  placeholder="自我介紹"
-                  autocomplete="current-password"
+                  id="introduction"
+                  cols="30"
+                  rows="10"
                   required
-                />
+                >
+                </textarea>
               </div>
             </div>
             <button type="submit" class="save btn btn-primary">儲存</button>
@@ -460,7 +471,7 @@ export default {
       this.showContent.like = true;
     },
     userLink(userId) {
-      this.$router.push({ name: "profile-other", params: { id: userId } });
+      this.$router.push({ name: "profile", params: { id: userId } });
     },
     userCheck(userId) {
       if (Number(userId) === this.currentUser.id) {
@@ -796,7 +807,8 @@ export default {
   align-items: center;
 }
 
-.modal-content input {
+.modal-content input,
+.modal-content textarea {
   background: #f5f8fa;
   display: block;
   border: none;
