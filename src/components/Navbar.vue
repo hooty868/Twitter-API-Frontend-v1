@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar d-flex flex-column justify-content-between">
-    <div class="pannel-container">
+    <Spinner v-if="isLoading" />
+    <div class="pannel-container" v-else>
       <div class="logo-container">
         <router-link to="/main" class="button-link">
           <img
@@ -57,7 +58,10 @@
           </h1>
         </div>
       </router-link>
-      <router-link :to="{ name: 'setting' }" class="button-link">
+      <router-link
+        :to="{ name: 'setting', params: { id: currentuser.id } }"
+        class="button-link"
+      >
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
@@ -156,8 +160,12 @@
 <script>
 import userAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
+  components: {
+    Spinner,
+  },
   props: {
     navbarStatus: {
       type: String,
@@ -166,6 +174,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       twitter: "",
       UserId: "-1",
       currentuser: {
@@ -196,12 +205,14 @@ export default {
         const userId = Newdata.data.id;
         const response = await userAPI.UserProfile(userId);
         this.currentuser = response.data;
+        this.isLoading = false;
       } catch (error) {
         console.log("error", error);
         Toast.fire({
           icon: "warning",
           title: error,
         });
+        this.isLoading = false;
       }
     },
     handleSubmit() {
