@@ -64,10 +64,7 @@ export default {
   },
   watch: {
     followerList(newValue) {
-      this.followers = {
-        ...this.followers,
-        ...newValue,
-      };
+      this.followers = [...this.followers, ...newValue];
     },
   },
   methods: {

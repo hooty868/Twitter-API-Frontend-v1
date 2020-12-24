@@ -15,3 +15,12 @@ export const emptyImageFilter = {
     }
   }
 }
+
+export const timeFormat = {
+  filters: {
+    timeFormat(datetime) {
+      moment.locale('zh-tw')
+      return datetime ? moment(datetime).format('A hh:mm・ LL') : '-'
+    }
+  }
+}
