@@ -2,7 +2,11 @@
   <div class="container">
     <form class="form-group w-100" @submit.stop.prevent="handleSubmit">
       <div class="logo-container text-center">
-        <img class="logo" src="/image/Logo.png" alt="Logo" />
+        <img
+          class="logo"
+          src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+          alt="Logo"
+        />
       </div>
       <div class="brand-container text-center">
         <h1 class="brand h3">建立你的帳號</h1>

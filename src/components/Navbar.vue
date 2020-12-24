@@ -3,20 +3,24 @@
     <div class="pannel-container">
       <div class="logo-container">
         <router-link to="/main" class="button-link">
-          <img class="logo" src="/image/Logo.png" alt="Logo" />
+          <img
+            class="logo"
+            src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+            alt="Logo"
+          />
         </router-link>
       </div>
       <router-link to="/main" class="button-link">
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/CurrentMainIcon.png"
+            src="https://upload.cc/i1/2020/12/24/tk5EOf.png"
             alt="Index"
             v-if="status === 'status1'"
           />
           <img
             class="pannel-icon"
-            src="/image/icon_index.png"
+            src="https://upload.cc/i1/2020/12/24/N9vPcY.png"
             alt="Index"
             v-else
           />
@@ -28,17 +32,20 @@
           </h1>
         </div>
       </router-link>
-      <router-link to="/profile" class="button-link">
+      <router-link
+        :to="{ name: 'profile', params: { id: currentuser.id } }"
+        class="button-link"
+      >
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/icon_profile_orange.png"
+            src="https://upload.cc/i1/2020/12/24/RFLOhD.png"
             alt="Profile"
             v-if="status === 'status2'"
           />
           <img
             class="pannel-icon"
-            src="/image/icon_profile.png"
+            src="https://upload.cc/i1/2020/12/24/T9gfR2.png"
             alt="Profile"
             v-else
           />
@@ -57,13 +64,13 @@
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/current_setting.png"
+            src="https://upload.cc/i1/2020/12/24/ctvaJL.png"
             alt="Setting"
             v-if="status === 'status3'"
           />
           <img
             class="pannel-icon"
-            src="/image/setting_icon_origin.png"
+            src="https://upload.cc/i1/2020/12/24/OEmSBo.png"
             alt="Setting"
             v-else
           />
@@ -138,7 +145,11 @@
     </div>
     <div class="logOut-contaier">
       <div class="pannel-icon-container d-flex" @click="logout">
-        <img class="pannel-icon" src="/image/icon_logout.png" alt="Setting" />
+        <img
+          class="pannel-icon"
+          src="https://upload.cc/i1/2020/12/24/d0kUL7.png"
+          alt="Setting"
+        />
         <h1 class="pannel-icon-text">登出</h1>
       </div>
     </div>

@@ -28,7 +28,11 @@
               data-target="#replyModal"
               @click="getTwitter(twitter.id)"
             >
-              <img class="icon-img" src="/image/reply_icon.png" alt="icon" />
+              <img
+                class="icon-img"
+                src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
+                alt="icon"
+              />
               <p class="reply-count">{{ twitter.repliedCount }}</p>
             </div>
             <div class="like-button d-flex">
@@ -41,7 +45,7 @@
                 <img
                   id="unlike"
                   class="icon-img unlike"
-                  src="/image/icon_like_fill.png"
+                  src="https://upload.cc/i1/2020/12/24/LCl9BZ.png"
                   alt="icon"
                 />
                 <p class="like-count-fill">{{ twitter.likedCount }}</p>
@@ -55,7 +59,7 @@
                 <img
                   id="like"
                   class="icon-img like"
-                  src="/image/like_icon.png"
+                  src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
                   alt="icon"
                 />
                 <p class="like-count">{{ twitter.likedCount }}</p>
@@ -79,7 +83,7 @@
           <div class="header w-100">
             <img
               class="cancle-icon"
-              src="/image/cancle_icon.png"
+              src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
               alt="cancle"
               data-dismiss="modal"
             />
@@ -273,7 +277,7 @@ export default {
           title: error,
         });
       }
-      this.twitter = "";
+      this.Replytwitter = "";
     },
   },
   data() {

@@ -85,8 +85,19 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        const NewResponse = await followerAPI.TopUsers();
-        this.followers = NewResponse.data;
+        // const NewResponse = await followerAPI.TopUsers();
+        // this.followers = NewResponse.data;
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId === followerId) {
+            follower = {
+              ...follower,
+              isFollowed: 1,
+            };
+            return follower;
+          } else {
+            return follower;
+          }
+        });
         this.isProcessing = true;
       } catch (error) {
         console.log("add", error);
@@ -105,20 +116,21 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        const NewResponse = await followerAPI.TopUsers();
-        this.followers = NewResponse.data;
-        this.isProcessing = true;
-        // this.followers = this.followers.map((follower) => {
-        //   if (follower.followingId === followerId) {
-        //     follower = {
-        //       ...follower,
-        //       isFollowed: 0,
-        //     };
-        //     return follower;
-        //   } else {
-        //     return follower;
-        //   }
-        // });
+        // const NewResponse = await followerAPI.TopUsers();
+        // this.followers = NewResponse.data;
+        // this.isProcessing = true;
+        this.followers = this.followers.map((follower) => {
+          if (follower.followingId === followerId) {
+            follower = {
+              ...follower,
+              isFollowed: 0,
+            };
+            return follower;
+          } else {
+            return follower;
+          }
+        });
+        this.isProcessing = false;
       } catch (error) {
         console.log("delete", error);
         Toast.fire({

@@ -11,7 +11,7 @@
         <div class="header d-flex">
           <img
             class="back-icon"
-            src="/image/back_icon.png"
+            src="https://upload.cc/i1/2020/12/24/oBeWkX.png"
             alt="backIcon"
             @click="$router.go(-1)"
           />
@@ -52,14 +52,14 @@
             <div class="icon-bar flex-gr1" :disabled="isProcessing">
               <img
                 class="icon-img"
-                src="/image/reply_icon.png"
+                src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
                 alt="icon"
                 data-toggle="modal"
                 data-target="#replyModal"
               />
               <img
                 class="icon-img"
-                src="/image/icon_like_fill.png"
+                src="https://upload.cc/i1/2020/12/24/LCl9BZ.png"
                 alt="icon"
                 v-if="parseInt(UserProfile.isLiked, 10)"
                 @click="Unliketwitter(UserProfile.id)"
@@ -67,7 +67,7 @@
               />
               <img
                 class="icon-img"
-                src="/image/like_icon.png"
+                src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
                 alt="icon"
                 @click="Liketwitter(UserProfile.id)"
                 v-else

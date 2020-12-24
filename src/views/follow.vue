@@ -6,12 +6,11 @@
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
-          <router-link to="/profile" class="button-link">
-            <img src="/image/arrow.png" alt="" />
-          </router-link>
+          <img @click="$router.back()" src="/image/arrow.png" alt="" />
+
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
-            <p class="twitter">{{ user.tweetCount }}推文推文</p>
+            <p class="twitter">{{ user.tweetCount }}推文</p>
           </div>
         </div>
 
@@ -39,7 +38,7 @@
         </div>
       </div>
       <div class="main-follower col-4 h-100">
-        <Followers />
+        <Followers :user-profile="user" :follower-list="followerlist" />
       </div>
     </div>
   </div>
@@ -51,6 +50,7 @@ import Followers from "./../components/followers";
 import Follower from "./../components/follower";
 import Following from "./../components/following";
 import userAPI from "../apis/user";
+import followerAPI from "./../apis/followers";
 import { fromNowFilter } from "./../utils/mixins";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
@@ -71,20 +71,33 @@ export default {
         follower: true,
         following: false,
       },
+      followerlist: [],
     };
   },
   computed: {
     ...mapState(["currentUser"]),
   },
   created() {
-    this.fetchUsers();
-    this.fetchTweets();
-    this.fetchLikes();
+    const { id: userId } = this.$route.params;
+    this.fetchUsers(userId);
+    this.fetchFollowerList();
   },
   methods: {
-    async fetchUsers() {
+    async fetchFollowerList() {
       try {
-        const { data } = await userAPI.getUser(this.currentUser.id);
+        const response = await followerAPI.TopUsers();
+        this.followerlist = response.data;
+      } catch (error) {
+        console.log("error", error);
+        Toast.fire({
+          icon: "warning",
+          title: error,
+        });
+      }
+    },
+    async fetchUsers(userId) {
+      try {
+        const { data } = await userAPI.getUser(userId);
         this.user = data;
       } catch (error) {
         console.log("error", error);
