@@ -89,7 +89,7 @@
               <div class="header w-100">
                 <img
                   class="cancle-icon"
-                  src="/image/cancle_icon.png"
+                  src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
                   alt="cancle"
                   data-dismiss="modal"
                 />

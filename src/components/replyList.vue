@@ -5,9 +5,14 @@
       v-for="twitter in twitters"
       :key="twitter.id"
     >
-      <img class="card-avater" :src="twitter.User.avatar" alt="avater" />
+      <img
+        class="card-avater"
+        :src="twitter.User.avatar"
+        alt="avater"
+        @click="profileLink(twitter.UserId)"
+      />
       <div class="card-content flex-grow-1">
-        <div class="content-title d-flex">
+        <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
           <p class="comment-date">3小時</p>
@@ -55,6 +60,9 @@ export default {
     },
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     fetchList() {
       this.twitters = this.Twitters;
       this.userprofile = this.userProfile;

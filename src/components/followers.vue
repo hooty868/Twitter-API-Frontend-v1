@@ -13,8 +13,13 @@
         v-for="follower in followers"
         :key="follower.followingId"
       >
-        <img class="profile-avater" :src="follower.avatar" alt="avater" />
-        <div class="card-content">
+        <img
+          class="profile-avater"
+          :src="follower.avatar"
+          alt="avater"
+          @click="profileLink(follower.followingId)"
+        />
+        <div class="card-content" @click="profileLink(follower.followingId)">
           <p class="card-name">{{ follower.name }}</p>
           <p class="card-account">@{{ follower.account }}</p>
         </div>
@@ -71,6 +76,9 @@ export default {
     },
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     tansferCards() {
       this.cardsSpread = true;
     },
