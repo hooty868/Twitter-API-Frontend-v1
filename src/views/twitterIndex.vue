@@ -38,8 +38,9 @@
               </p>
             </div>
             <div class="reply-time flex-gr1 d-flex w-100">
-              <p class="content-text">上午 10:05・</p>
-              <p class="content-text">2020年6月10日</p>
+              <p class="content-text">
+                {{ UserProfile.createdAt | timeFormat }}
+              </p>
             </div>
             <div class="function-bar flex-gr1 d-flex w-100">
               <p class="content-text num-bd">
@@ -172,8 +173,10 @@ import followerAPI from "./../apis/followers";
 import userAPI from "./../apis/users";
 import { mapState } from "vuex";
 import { Toast } from "./../utils/helpers";
+import { timeFormat } from "./../utils/mixins";
 
 export default {
+  mixins: [timeFormat],
   components: {
     Navbar,
     Followers,

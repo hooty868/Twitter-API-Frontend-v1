@@ -123,7 +123,7 @@
                   <div class="account mr-1">@{{ tweet.user.account }} ・</div>
                   <div class="creat-time">{{ tweet.createdAt | fromNow }}</div>
                 </div>
-                <div class="tweet">
+                <div class="tweet" @click="twitterLink(tweet.id)">
                   {{ tweet.description }}
                 </div>
                 <div class="follow-content">
@@ -139,7 +139,7 @@
               </div>
             </div>
           </div>
-          <div class="content-render" v-if="showContent.like">
+          <div class="content-render like-part" v-if="showContent.like">
             <div class="card" v-for="like in likes" :key="like.id">
               <div class="user-avatar">
                 <img
@@ -151,11 +151,13 @@
               </div>
               <div class="content">
                 <div class="detail">
-                  <div class="name mr-1">{{ like.user.name }}</div>
+                  <div @click="userLink(like.user.id)" class="name mr-1">
+                    {{ like.user.name }}
+                  </div>
                   <div class="account mr-1">@{{ like.user.account }}・</div>
                   <div class="creat-time">{{ like.createdAt | fromNow }}</div>
                 </div>
-                <div class="tweet">
+                <div class="tweet" @click="twitterLink(like.TweetId)">
                   {{ like.description }}
                 </div>
                 <div class="follow-content">
@@ -175,21 +177,28 @@
             <div class="card" v-for="reply in replies" :key="reply.id">
               <div class="user-avatar">
                 <img
-                  @click="userLink(reply.Tweet.User.id)"
+                  @click="userLink(user.id)"
                   class="user-avatar"
-                  :src="reply.Tweet.User.avatar"
+                  :src="user.avatar"
                   alt=""
                 />
               </div>
               <div class="content">
                 <div class="detail">
-                  <div class="name mr-1">{{ reply.Tweet.User.name }}</div>
-                  <div class="account mr-1">
-                    @{{ reply.Tweet.User.account }}・
-                  </div>
+                  <div class="name mr-1">{{ user.name }}</div>
+                  <div class="account mr-1">@{{ user.account }}・</div>
                   <div class="creat-time">{{ reply.createdAt | fromNow }}</div>
                 </div>
-                <div class="tweet">
+                <div class="reply-to">
+                  <div class="reply">回覆</div>
+                  <div
+                    @click="userLink(reply.Tweet.User.id)"
+                    class="reply-count"
+                  >
+                    @{{ reply.Tweet.User.account }}
+                  </div>
+                </div>
+                <div class="tweet" @click="twitterLink(reply.TweetId)">
                   {{ reply.comment }}
                 </div>
               </div>
@@ -474,6 +483,9 @@ export default {
     userLink(userId) {
       this.$router.push({ name: "profile", params: { id: userId } });
     },
+    twitterLink(twitterId) {
+      this.$router.push({ name: "twitterDetail", params: { id: twitterId } });
+    },
     userCheck(userId) {
       if (Number(userId) === this.currentUser.id) {
         return (this.isCurrentUser = true);
@@ -495,7 +507,7 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        // this.$router.push("/profile");
+        location.reload();
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -707,6 +719,10 @@ export default {
   padding: 15px 0 0 13px;
 }
 
+.card .content {
+  width: 100%;
+}
+
 .card .user-avatar {
   width: 50px;
   height: 50px;
@@ -715,7 +731,8 @@ export default {
   margin-right: 10px;
 }
 
-.card .detail {
+.card .detail,
+.card .reply-to {
   display: flex;
 }
 
@@ -730,8 +747,12 @@ export default {
 .card .detail .account,
 .creat-time,
 .follow-content .response,
-.follow-content .like {
+.follow-content .like,
+.card .reply-to .reply {
   color: #657786;
+}
+.like-part .follow-content .like {
+  color: #e0245e;
 }
 
 .follow-content {
