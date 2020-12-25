@@ -425,6 +425,10 @@ export default {
 </script>
 
 <style scoped>
+.back-icon:hover {
+  opacity: 0.5;
+  transition: transform 0.2s ease-out;
+}
 .flex-gr1 {
   flex-grow: 1;
 }

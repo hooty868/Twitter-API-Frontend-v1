@@ -63,7 +63,7 @@
                   <div class="icon-wrapper">
                     <img
                       v-if="user.isFollowed"
-                      src="https://upload.cc/i1/2020/12/24/ptRQJO.png"
+                      src="https://upload.cc/i1/2020/12/25/dqlj9O.png"
                       alt=""
                     />
                     <img
@@ -590,10 +590,14 @@ export default {
   align-items: center;
 }
 
-.main-content .header img:hover {
+.main-content .header img {
   cursor: pointer;
   width: 18px;
   height: 18px;
+}
+.main-content .header img:hover {
+  opacity: 0.5;
+  transition: transform 0.2s ease-out;
 }
 
 .header-content {

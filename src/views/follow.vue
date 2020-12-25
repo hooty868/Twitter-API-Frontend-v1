@@ -6,7 +6,11 @@
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
-          <img @click="$router.back()" src="/image/arrow.png" alt="" />
+          <img
+            @click="$router.back()"
+            src="https://upload.cc/i1/2020/12/24/oBeWkX.png"
+            alt=""
+          />
 
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
@@ -141,10 +145,15 @@ export default {
   align-items: center;
 }
 
-.main-content .header img:hover {
+.main-content .header img {
   cursor: pointer;
   width: 18px;
   height: 18px;
+}
+
+.main-content .header img:hover {
+  opacity: 0.5;
+  transition: transform 0.2s ease-out;
 }
 
 .header-content {

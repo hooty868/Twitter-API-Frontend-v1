@@ -3,12 +3,16 @@
     <nav class="d-flex flex-column justify-content-between align-items-center">
       <div class="top-items">
         <div class="logo-container">
-          <img class="logo" src="/image/Logo.png" alt="Logo" />
+          <img
+            class="logo"
+            src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+            alt="Logo"
+          />
         </div>
         <div class="pannel-icon-container chosen d-flex">
           <img
             class="pannel-icon"
-            src="/image/icon_index_orange.png"
+            src="https://upload.cc/i1/2020/12/24/HZJjDN.png"
             alt="Index"
           />
           <h1 class="pannel-icon-text chosen">推文清單</h1>
@@ -18,7 +22,7 @@
           <div class="pannel-icon-container d-flex">
             <img
               class="pannel-icon"
-              src="/image/icon_profile.png"
+              src="https://upload.cc/i1/2020/12/24/RFLOhD.png"
               alt="Profile"
             />
             <h1 class="pannel-icon-text">使用者列表</h1>
@@ -27,7 +31,11 @@
       </div>
       <div>
         <div class="d-flex align-items-center" @click="logout">
-          <img class="pannel-icon m-3" src="/image/logout@2x.png" alt="Index" />
+          <img
+            class="pannel-icon m-3"
+            src="https://upload.cc/i1/2020/12/24/6SJqIC.png"
+            alt="Index"
+          />
           <a href="#" class="text-center text-dark">登出</a>
         </div>
       </div>
