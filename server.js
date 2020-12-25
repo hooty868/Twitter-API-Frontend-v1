@@ -1,12 +1,13 @@
-// // server.js
 // var express = require('express');
+// var proxy = require('http-proxy-middleware');
 // var path = require('path');
 // var serveStatic = require('serve-static');
 // app = express();
-// app.use('/', serveStatic(path.join(__dirname, '/dist')));
-// app.get(/.*/, function (req, res) {
-//   res.sendFile(path.join(__dirname, '/dist/index.html'));
-// });
+// app.use(serveStatic(__dirname));
+// app.use(
+//   '/api',
+//   proxy({ target: 'https://simple-twitter-2020.herokuapp.com', changeOrigin: true })
+// );
 // var port = process.env.PORT || 5000;
 // app.listen(port);
-// console.log('server started ' + port)
+// console.log('server started ' + port);
