@@ -327,6 +327,9 @@ export default {
 .comments-card {
   border-bottom: 1px #e6ecf0 solid;
 }
+.comments-card:hover {
+  background: #f0f0f0;
+}
 .card-avater {
   width: 50px;
   height: 50px;
