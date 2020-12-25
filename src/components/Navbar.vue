@@ -1,20 +1,36 @@
 <template>
   <nav class="navbar d-flex flex-column justify-content-between">
-    <div class="pannel-container">
+    <Spinner v-if="isLoading" />
+    <div class="pannel-container" v-else>
       <div class="logo-container">
         <router-link to="/main" class="button-link">
-          <img class="logo" src="/image/Logo.png" alt="Logo" />
+          <img
+            class="logo"
+            src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+            alt="Logo"
+          />
         </router-link>
       </div>
-
       <router-link to="/main" class="button-link">
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/CurrentMainIcon.png"
+            src="https://upload.cc/i1/2020/12/24/tk5EOf.png"
             alt="Index"
+            v-if="status === 'status1'"
           />
-          <h1 class="pannel-icon-text main">首頁</h1>
+          <img
+            class="pannel-icon"
+            src="https://upload.cc/i1/2020/12/24/N9vPcY.png"
+            alt="Index"
+            v-else
+          />
+          <h1
+            class="pannel-icon-text main"
+            :class="{ colorOrange: status === 'status1' }"
+          >
+            首頁
+          </h1>
         </div>
       </router-link>
       <router-link
@@ -24,10 +40,22 @@
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/icon_profile.png"
+            src="https://upload.cc/i1/2020/12/24/RFLOhD.png"
             alt="Profile"
+            v-if="status === 'status2'"
           />
-          <h1 class="pannel-icon-text">個人資料</h1>
+          <img
+            class="pannel-icon"
+            src="https://upload.cc/i1/2020/12/24/T9gfR2.png"
+            alt="Profile"
+            v-else
+          />
+          <h1
+            class="pannel-icon-text"
+            :class="{ colorOrange: status === 'status2' }"
+          >
+            個人資料
+          </h1>
         </div>
       </router-link>
       <router-link
@@ -37,12 +65,25 @@
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/current_setting.png"
+            src="https://upload.cc/i1/2020/12/24/ctvaJL.png"
             alt="Setting"
+            v-if="status === 'status3'"
           />
-          <h1 class="pannel-icon-text setting">設定</h1>
+          <img
+            class="pannel-icon"
+            src="https://upload.cc/i1/2020/12/24/OEmSBo.png"
+            alt="Setting"
+            v-else
+          />
+          <h1
+            class="pannel-icon-text setting"
+            :class="{ colorOrange: status === 'status3' }"
+          >
+            設定
+          </h1>
         </div>
       </router-link>
+
       <!-- Button trigger modal -->
       <button
         type="button"
@@ -67,7 +108,7 @@
             <div class="header">
               <img
                 class="cancle-icon"
-                src="/image/cancle_icon.png"
+                src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
                 alt="cancle"
                 data-dismiss="modal"
               />
@@ -105,7 +146,11 @@
     </div>
     <div class="logOut-contaier">
       <div class="pannel-icon-container d-flex" @click="logout">
-        <img class="pannel-icon" src="/image/icon_logout.png" alt="Setting" />
+        <img
+          class="pannel-icon"
+          src="https://upload.cc/i1/2020/12/24/d0kUL7.png"
+          alt="Setting"
+        />
         <h1 class="pannel-icon-text">登出</h1>
       </div>
     </div>
@@ -115,14 +160,38 @@
 <script>
 import userAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import Spinner from "./../components/Spinner";
 
 export default {
+  components: {
+    Spinner,
+  },
+  props: {
+    navbarStatus: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
+      isLoading: true,
       twitter: "",
-      UserId: "",
-      currentuser: {},
+      UserId: "-1",
+      currentuser: {
+        account: "",
+        avatar: "",
+        cover: "",
+        email: "",
+        followerCount: -1,
+        followingCount: -1,
+        id: -1,
+        introduction: "",
+        isFollowed: -1,
+        name: "",
+        tweetCount: -1,
+      },
       isAuthenticated: false,
+      status: "",
     };
   },
   created() {
@@ -130,17 +199,20 @@ export default {
   },
   methods: {
     async fetchUser() {
+      this.status = this.navbarStatus;
       try {
         const Newdata = await userAPI.getCurrentUser();
         const userId = Newdata.data.id;
         const response = await userAPI.UserProfile(userId);
         this.currentuser = response.data;
+        this.isLoading = false;
       } catch (error) {
         console.log("error", error);
         Toast.fire({
           icon: "warning",
           title: error,
         });
+        this.isLoading = false;
       }
     },
     handleSubmit() {
@@ -165,6 +237,9 @@ export default {
 </script>
 
 <style scoped>
+.colorOrange {
+  color: #ff6600 !important;
+}
 .navbar {
   height: 100%;
   width: 235px;

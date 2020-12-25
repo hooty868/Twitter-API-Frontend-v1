@@ -2,7 +2,11 @@
   <div class="container">
     <form class="form-group w-100" @submit.stop.prevent="handleSubmit">
       <div class="logo-container text-center">
-        <img class="logo" src="/image/Logo.png" alt="Logo" />
+        <img
+          class="logo"
+          src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+          alt="Logo"
+        />
       </div>
       <div class="brand-container text-center">
         <h1 class="brand h3">建立你的帳號</h1>
@@ -14,7 +18,7 @@
           name="account"
           v-model="account"
           type="account"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="account"
           required
@@ -28,7 +32,7 @@
           name="name"
           v-model="name"
           type="text"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="username"
           requiredx
@@ -42,7 +46,7 @@
           name="email"
           v-model="email"
           type="email"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="email"
           required
@@ -56,7 +60,7 @@
           name="password"
           v-model="password"
           type="password"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="new-password"
           required
@@ -70,7 +74,7 @@
           name="passwordCheck"
           v-model="passwordCheck"
           type="password"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="new-password"
           required

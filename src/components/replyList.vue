@@ -5,12 +5,20 @@
       v-for="twitter in twitters"
       :key="twitter.id"
     >
-      <img class="card-avater" :src="twitter.User.avatar" alt="avater" />
+      <img
+        class="card-avater cursor-hand"
+        :src="twitter.User.avatar"
+        alt="avater"
+        @click="profileLink(twitter.UserId)"
+      />
       <div class="card-content flex-grow-1">
-        <div class="content-title d-flex">
+        <div
+          class="content-title d-flex cursor-hand"
+          @click="profileLink(twitter.UserId)"
+        >
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
-          <p class="comment-date">3小時</p>
+          <p class="comment-date">{{ twitter.createdAt | fromNow }}</p>
         </div>
         <div class="content-description-reply d-flex">
           <p class="content-text">回覆</p>
@@ -29,10 +37,10 @@
 </template>
 
 <script>
-// import twitterAPI from "./../apis/twitter";
-// import { Toast } from "./../utils/helpers";
+import { fromNowFilter } from "./../utils/mixins";
 
 export default {
+  mixins: [fromNowFilter],
   props: {
     userProfile: {
       type: Object,
@@ -55,6 +63,9 @@ export default {
     },
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     fetchList() {
       this.twitters = this.Twitters;
       this.userprofile = this.userProfile;
@@ -167,5 +178,9 @@ export default {
   font-size: 15px;
   line-height: 22px;
   color: #1c1c1c;
+}
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
 }
 </style>

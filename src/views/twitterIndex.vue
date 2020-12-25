@@ -10,16 +10,20 @@
       <div class="main-content col h-100">
         <div class="header d-flex">
           <img
-            class="back-icon"
-            src="/image/back_icon.png"
+            class="back-icon cursor-hand"
+            src="https://upload.cc/i1/2020/12/24/oBeWkX.png"
             alt="backIcon"
             @click="$router.go(-1)"
           />
           <p>推文</p>
         </div>
-        <div class="twitter-bar d-flex flex-column w-100">
+        <Spinner v-if="isLoading" />
+        <div class="twitter-bar d-flex flex-column w-100" v-else>
           <div class="twitter-bar-container">
-            <div class="profile-detail-bar d-flex">
+            <div
+              class="profile-detail-bar d-flex cursor-hand"
+              @click="profileLink(UserProfile.UserId)"
+            >
               <img
                 class="profile-avater"
                 :src="UserProfile.User.avatar"
@@ -53,14 +57,14 @@
             <div class="icon-bar flex-gr1" :disabled="isProcessing">
               <img
                 class="icon-img"
-                src="/image/reply_icon.png"
+                src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
                 alt="icon"
                 data-toggle="modal"
                 data-target="#replyModal"
               />
               <img
                 class="icon-img"
-                src="/image/icon_like_fill.png"
+                src="https://upload.cc/i1/2020/12/24/LCl9BZ.png"
                 alt="icon"
                 v-if="parseInt(UserProfile.isLiked, 10)"
                 @click="Unliketwitter(UserProfile.id)"
@@ -68,7 +72,7 @@
               />
               <img
                 class="icon-img"
-                src="/image/like_icon.png"
+                src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
                 alt="icon"
                 @click="Liketwitter(UserProfile.id)"
                 v-else
@@ -90,7 +94,7 @@
               <div class="header w-100">
                 <img
                   class="cancle-icon"
-                  src="/image/cancle_icon.png"
+                  src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
                   alt="cancle"
                   data-dismiss="modal"
                 />
@@ -168,6 +172,7 @@
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
 import replyList from "./../components/replyList";
+import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import followerAPI from "./../apis/followers";
 import userAPI from "./../apis/users";
@@ -178,6 +183,7 @@ import { timeFormat } from "./../utils/mixins";
 export default {
   mixins: [timeFormat],
   components: {
+    Spinner,
     Navbar,
     Followers,
     replyList,
@@ -193,6 +199,9 @@ export default {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     async fetchUser() {
       try {
         const Newdata = await userAPI.getCurrentUser();
@@ -257,7 +266,9 @@ export default {
       try {
         const response = await twitterAPI.getTwitterDetail(id);
         this.UserProfile = response.data;
+        this.isLoading = false;
       } catch (error) {
+        this.isLoading = false;
         console.log("error", error);
         Toast.fire({
           icon: "warning",
@@ -357,6 +368,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       isProcessing: false,
       twitter: "",
       UserId: "",

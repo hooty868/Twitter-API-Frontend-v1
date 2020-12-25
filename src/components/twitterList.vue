@@ -6,16 +6,16 @@
       :key="twitter.id"
     >
       <img
-        class="card-avater"
+        class="card-avater cursor-hand"
         :src="twitter.User.avatar"
         alt="avater"
-        @click="twitterLink(twitter.id)"
+        @click="profileLink(twitter.UserId)"
       />
-      <div class="card-content flex-grow-1">
-        <div class="content-title d-flex" @click="twitterLink(twitter.id)">
+      <div class="card-content flex-grow-1 cursor-hand">
+        <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
-          <p class="comment-date">3小時</p>
+          <p class="comment-date">{{ twitter.createdAt | fromNow }}</p>
         </div>
         <div class="content-description">
           <p class="content-text w-100" @click="twitterLink(twitter.id)">
@@ -28,7 +28,11 @@
               data-target="#replyModal"
               @click="getTwitter(twitter.id)"
             >
-              <img class="icon-img" src="/image/reply_icon.png" alt="icon" />
+              <img
+                class="icon-img"
+                src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
+                alt="icon"
+              />
               <p class="reply-count">{{ twitter.repliedCount }}</p>
             </div>
             <div class="like-button d-flex">
@@ -41,7 +45,7 @@
                 <img
                   id="unlike"
                   class="icon-img unlike"
-                  src="/image/icon_like_fill.png"
+                  src="https://upload.cc/i1/2020/12/24/LCl9BZ.png"
                   alt="icon"
                 />
                 <p class="like-count-fill">{{ twitter.likedCount }}</p>
@@ -55,7 +59,7 @@
                 <img
                   id="like"
                   class="icon-img like"
-                  src="/image/like_icon.png"
+                  src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
                   alt="icon"
                 />
                 <p class="like-count">{{ twitter.likedCount }}</p>
@@ -79,7 +83,7 @@
           <div class="header w-100">
             <img
               class="cancle-icon"
-              src="/image/cancle_icon.png"
+              src="https://upload.cc/i1/2020/12/24/RSJ94l.png"
               alt="cancle"
               data-dismiss="modal"
             />
@@ -95,7 +99,8 @@
                 <div class="description-head">
                   <p class="head-name">{{ twitterDetail.User.name }}</p>
                   <p class="head-account-time">
-                    @{{ twitterDetail.User.account }} · 3小時
+                    @{{ twitterDetail.User.account }} ·
+                    {{ twitterDetail.createdAt | fromNow }}
                   </p>
                 </div>
                 <div class="description-content">
@@ -150,8 +155,10 @@
 <script>
 import twitterAPI from "./../apis/twitter";
 import { Toast } from "./../utils/helpers";
+import { fromNowFilter } from "./../utils/mixins";
 
 export default {
+  mixins: [fromNowFilter],
   props: {
     repliedTwitter: {
       type: Object,
@@ -195,6 +202,9 @@ export default {
         }
       });
       this.twitterDetail = twitter[0];
+    },
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
     },
     twitterLink(twitterId) {
       this.$router.push({ name: "twitterDetail", params: { id: twitterId } });
@@ -401,6 +411,14 @@ export default {
   line-height: 13px;
   color: #e0245e;
 }
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
+}
+.content-text:hover {
+  opacity: 0.5;
+  transition: opacity 0.2s ease-out;
+}
 /* Modal  */
 .modal-content {
   width: 600px;
@@ -454,7 +472,7 @@ export default {
 .content-description .description-head .head-account-time {
   margin: 0;
   margin-left: 5px;
-  width: 112px;
+  width: 480px;
   height: 22px;
   font-family: Noto Sans TC;
   font-style: normal;

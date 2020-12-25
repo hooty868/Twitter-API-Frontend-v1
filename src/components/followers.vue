@@ -13,8 +13,13 @@
         v-for="follower in followers"
         :key="follower.followingId"
       >
-        <img class="profile-avater" :src="follower.avatar" alt="avater" />
-        <div class="card-content">
+        <img
+          class="profile-avater"
+          :src="follower.avatar"
+          alt="avater"
+          @click="profileLink(follower.followingId)"
+        />
+        <div class="card-content" @click="profileLink(follower.followingId)">
           <p class="card-name">{{ follower.name }}</p>
           <p class="card-account">@{{ follower.account }}</p>
         </div>
@@ -62,12 +67,19 @@ export default {
   created() {
     this.fetchUser();
   },
+  // updated() {
+  //   console.log("componemnt updated");
+  //   this.fetchUser();
+  // },
   watch: {
     followerList(newValue) {
-      this.followers = [...this.followers, ...newValue];
+      this.followers = newValue;
     },
   },
   methods: {
+    profileLink(userId) {
+      this.$router.push({ name: "profile", params: { id: userId } });
+    },
     tansferCards() {
       this.cardsSpread = true;
     },
@@ -84,14 +96,18 @@ export default {
         }
         this.followers = this.followers.map((follower) => {
           if (follower.followingId === followerId) {
-            follower.isFollowed = 1;
+            follower = {
+              ...follower,
+              isFollowed: 1,
+            };
             return follower;
           } else {
             return follower;
           }
         });
+        this.isProcessing = true;
       } catch (error) {
-        console.log("add", error);
+        console.log("erroe:", error);
         Toast.fire({
           icon: "warning",
           title: error,
@@ -107,6 +123,9 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
+        // const NewResponse = await followerAPI.TopUsers();
+        // this.followers = NewResponse.data;
+        // this.isProcessing = true;
         this.followers = this.followers.map((follower) => {
           if (follower.followingId === followerId) {
             follower = {
@@ -118,6 +137,7 @@ export default {
             return follower;
           }
         });
+        this.isProcessing = false;
       } catch (error) {
         console.log("delete", error);
         Toast.fire({
