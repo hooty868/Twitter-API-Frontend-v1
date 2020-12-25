@@ -6,7 +6,11 @@
       </div>
       <div class="main-content col h-100">
         <div class="header pl-3">
-          <img @click="$router.back()" src="/image/arrow.png" alt="" />
+          <img
+            @click="$router.back()"
+            src="https://upload.cc/i1/2020/12/24/oBeWkX.png"
+            alt="backIcon"
+          />
           <div class="header-content">
             <p class="name">{{ user.name }}</p>
             <p class="twitter">{{ user.tweetCount }}推文</p>
@@ -51,15 +55,22 @@
                 </div>
                 <div v-else class="edit row">
                   <div class="icon-wrapper">
-                    <img src="/image/mail.png" alt="" />
+                    <img
+                      src="https://upload.cc/i1/2020/12/24/c7yPkN.png"
+                      alt=""
+                    />
                   </div>
                   <div class="icon-wrapper">
                     <img
                       v-if="user.isFollowed"
-                      src="/image/bellChecked.png"
+                      src="https://upload.cc/i1/2020/12/24/ptRQJO.png"
                       alt=""
                     />
-                    <img v-else src="/image/bell.png" alt="" />
+                    <img
+                      v-else
+                      src="https://upload.cc/i1/2020/12/24/Pk5tAO.png"
+                      alt=""
+                    />
                   </div>
 
                   <div>
@@ -118,7 +129,7 @@
                 />
               </div>
               <div class="content">
-                <div class="detail">
+                <div class="detail" @click="userLink(tweet.user.id)">
                   <div class="name mr-1">{{ tweet.user.name }}</div>
                   <div class="account mr-1">@{{ tweet.user.account }} ・</div>
                   <div class="creat-time">{{ tweet.createdAt | fromNow }}</div>
@@ -126,13 +137,19 @@
                 <div class="tweet" @click="twitterLink(tweet.id)">
                   {{ tweet.description }}
                 </div>
-                <div class="follow-content">
+                <div class="follow-content" @click="twitterLink(tweet.id)">
                   <div class="response">
-                    <img src="/image/reply_icon.png" alt="" />
+                    <img
+                      src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
+                      alt=""
+                    />
                     {{ tweet.repliedCount }}
                   </div>
                   <div class="like">
-                    <img src="/image/like_icon.png" alt="" />
+                    <img
+                      src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
+                      alt=""
+                    />
                     {{ tweet.likedCount }}
                   </div>
                 </div>
@@ -162,12 +179,16 @@
                 </div>
                 <div class="follow-content">
                   <div class="response">
-                    <img src="/image/reply_icon.png" alt="" />{{
-                      like.repliedCount
-                    }}
+                    <img
+                      src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
+                      alt=""
+                    />{{ like.repliedCount }}
                   </div>
                   <div class="like">
-                    <img src="/image/liked.png" alt="" />{{ like.likedCount }}
+                    <img
+                      src="https://upload.cc/i1/2020/12/24/GreERH.png"
+                      alt=""
+                    />{{ like.likedCount }}
                   </div>
                 </div>
               </div>
@@ -254,9 +275,17 @@
                     style="display: none"
                     @change="handleCoverChange"
                   />
-                  <img class="edit-icon" src="/image/editImage.png" alt="" />
+                  <img
+                    class="edit-icon"
+                    src="https://upload.cc/i1/2020/12/24/B8QgPF.png"
+                    alt=""
+                  />
                 </label>
-                <img class="edit-icon" src="/image/exit.png" alt="" />
+                <img
+                  class="edit-icon"
+                  src="https://upload.cc/i1/2020/12/24/hnLaWx.png"
+                  alt=""
+                />
               </div>
 
               <div class="avatar">
@@ -276,7 +305,11 @@
                       style="display: none"
                       @change="handleAvatarChange"
                     />
-                    <img class="edit-icon" src="/image/editImage.png" alt="" />
+                    <img
+                      class="edit-icon"
+                      src="https://upload.cc/i1/2020/12/24/B8QgPF.png"
+                      alt=""
+                    />
                   </label>
                 </div>
               </div>
