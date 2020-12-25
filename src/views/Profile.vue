@@ -283,6 +283,7 @@
             </div>
             <div class="text-input">
               <div class="form-label-group mb-2 input-name">
+                <div class="input-type-name">名稱</div>
                 <input
                   v-model="user.name"
                   id="name"
@@ -293,9 +294,11 @@
                   required
                   autofocus
                 />
+                <div class="text-count-name">{{ user.name.length }}/50</div>
               </div>
 
               <div class="form-label-group mb-3 input-intro">
+                <div class="input-type-intro">自我介紹</div>
                 <textarea
                   v-model="user.introduction"
                   name="introduction"
@@ -305,6 +308,9 @@
                   required
                 >
                 </textarea>
+                <div class="text-count-intro">
+                  {{ user.introduction.length }}/160
+                </div>
               </div>
             </div>
             <button type="submit" class="save btn btn-primary">儲存</button>
@@ -463,7 +469,6 @@ export default {
         this.editUser.avatar = imageURL;
       }
     },
-
     showTweets() {
       this.showContent.tweets = true;
       this.showContent.reply = false;
@@ -839,10 +844,12 @@ export default {
 
 .modal-content #name {
   height: 54px;
+  padding: 10px 0 0 5px;
 }
 
 .modal-content #introduction {
   height: 150px;
+  padding: 20px 0 0 5px;
 }
 
 .modal-content input::placeholder {
@@ -890,5 +897,53 @@ export default {
   position: absolute;
   right: 15px;
   top: 12px;
+}
+
+.modal-content .text-input .text-count-name,
+.modal-content .text-input .text-count-intro {
+  color: #657786;
+  width: 32px;
+  height: 22px;
+}
+
+.modal-content .text-input .input-type-name,
+.modal-content .text-input .input-type-intro {
+  color: #657786;
+  width: 100%;
+  height: 15px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.modal-content .text-input .input-name {
+  position: relative;
+}
+
+.modal-content .text-input .input-intro {
+  position: relative;
+  margin-top: 43px;
+}
+
+.modal-content .text-input .text-count-name {
+  position: absolute;
+  right: 5px;
+  bottom: -22px;
+}
+.modal-content .text-input .text-count-intro {
+  position: absolute;
+  right: 10px;
+  bottom: -22px;
+}
+
+.modal-content .text-input .input-type-name {
+  position: absolute;
+  top: 0%;
+  left: 5px;
+}
+
+.modal-content .text-input .input-type-intro {
+  position: absolute;
+  top: 0%;
+  left: 5px;
 }
 </style>
