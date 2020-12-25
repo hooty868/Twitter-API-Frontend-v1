@@ -933,6 +933,12 @@ export default {
   height: 20px;
 }
 
+.edit-icon:hover {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
 .avatar .edit-icon {
   position: absolute;
   top: 50%;
