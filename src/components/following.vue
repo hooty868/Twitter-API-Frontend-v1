@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="card" v-for="follower in followers" :key="follower.followingId">
+    <div
+      class="card"
+      v-for="follower in followers"
+      :key="follower.followingId"
+      @click="userLink(follower.followingId)"
+    >
       <div class="user-avatar">
         <img
           @click="userLink(follower.followingId)"
@@ -135,6 +140,11 @@ export default {
   flex-direction: row;
   padding: 15px 0 0 13px;
   position: relative;
+  cursor: pointer;
+}
+
+.card:hover {
+  background: #f0f0f0;
 }
 
 .card .user-avatar,
@@ -162,6 +172,10 @@ export default {
   outline: none;
 }
 
+.card .follower-btn:hover {
+  background: #c44f00;
+}
+
 .card .follow-btn {
   width: 62px;
   height: 30px;
@@ -173,6 +187,10 @@ export default {
   right: 15px;
   top: 11px;
   outline: none;
+}
+
+.card .follow-btn:hover {
+  background: #ffeedd;
 }
 
 .card .detail .name {

@@ -540,11 +540,15 @@ export default {
 .navbar {
   margin: 0 25px auto auto;
 }
+
+/* main-content */
 .main-content {
   width: 600px;
   padding: 0;
   border: 1px #e6ecf0 solid;
 }
+
+/* main-content > header */
 .main-content .header {
   width: 100%;
   height: 55px;
@@ -572,6 +576,7 @@ export default {
   color: #657786;
 }
 
+/* main-content > user-info */
 .user-info {
   width: 100%;
 }
@@ -630,6 +635,11 @@ export default {
   color: black;
 }
 
+.follow-detail .button-link:hover {
+  border: #657786;
+  color: #657786;
+}
+
 .follow-detail span {
   color: #657786;
 }
@@ -644,6 +654,9 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+.detail .edit-button .edit:hover {
+  background: #ffeedd;
 }
 
 .detail .edit .icon-wrapper {
@@ -668,6 +681,10 @@ export default {
   outline: none;
 }
 
+.detail .edit .follow-btn:hover {
+  background: #ffeedd;
+}
+
 .detail .edit .follower-btn {
   width: 122px;
   height: 40px;
@@ -679,11 +696,17 @@ export default {
   outline: none;
 }
 
+.detail .edit .follower-btn:hover {
+  background: #c44f00;
+}
+
 .detail .edit {
   position: absolute;
   right: 30px;
   top: 10px;
 }
+
+/* main-content > user-tweet */
 
 .user-tweet {
   width: 100%;
@@ -705,6 +728,11 @@ export default {
   cursor: pointer;
 }
 
+.content-control .content:hover {
+  background: #ffeedd;
+  color: #ff6600;
+}
+
 .content-control .active {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
@@ -714,6 +742,7 @@ export default {
   max-height: 600px;
   overflow-y: scroll;
 }
+
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;
@@ -721,6 +750,11 @@ export default {
   display: flex;
   flex-direction: row;
   padding: 15px 0 0 13px;
+  cursor: pointer;
+}
+
+.card:hover {
+  background: #f0f0f0;
 }
 
 .card .content {
@@ -897,6 +931,10 @@ export default {
   position: absolute;
   right: 15px;
   top: 12px;
+}
+
+.modal-content form .save:hover {
+  background: #c44f00;
 }
 
 .modal-content .text-input .text-count-name,
