@@ -18,7 +18,7 @@
           name="account"
           v-model="account"
           type="account"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="account"
           required
@@ -32,7 +32,7 @@
           name="name"
           v-model="name"
           type="text"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="username"
           requiredx
@@ -46,7 +46,7 @@
           name="email"
           v-model="email"
           type="email"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="email"
           required
@@ -60,7 +60,7 @@
           name="password"
           v-model="password"
           type="password"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="new-password"
           required
@@ -74,7 +74,7 @@
           name="passwordCheck"
           v-model="passwordCheck"
           type="password"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           placeholder=""
           autocomplete="new-password"
           required

@@ -18,7 +18,7 @@
           v-model="account"
           name="account"
           type="account"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           autocomplete="account"
           required
           v-focus
@@ -32,7 +32,7 @@
           v-model="password"
           name="password"
           type="password"
-          class="form-input form-control"
+          class="form-input form-control cursor-hand"
           autocomplete="current-password"
           required
         />
@@ -114,6 +114,9 @@ export default {
 </script>
 
 <style>
+.cursor-hand {
+  cursor: pointer;
+}
 .form-group {
   max-width: 540px;
   margin: 0 auto 0 auto;
@@ -144,6 +147,17 @@ export default {
   position: relative;
   margin-bottom: 20px;
 }
+.form-label-group:hover::after {
+  content: "";
+  width: 99%;
+  height: 2px;
+  background: #657786;
+  border-radius: 0px 0px 4px 4px;
+  position: absolute;
+  left: 0.5%;
+  transform: scale(0, 0);
+  transition: transform 0.4s ease-out;
+}
 .form-label-group::after {
   content: "";
   width: 99%;
@@ -152,6 +166,7 @@ export default {
   border-radius: 0px 0px 4px 4px;
   position: absolute;
   left: 0.5%;
+  transform: scale(1, 1);
 }
 .form-label-group label {
   position: absolute;
@@ -170,6 +185,9 @@ export default {
   border-radius: 4px;
   width: 540px;
   height: 50px;
+  padding: 0;
+  padding-top: 20px;
+  padding-left: 10px;
 }
 .btn-submit {
   width: 540px;

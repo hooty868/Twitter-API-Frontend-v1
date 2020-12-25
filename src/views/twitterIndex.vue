@@ -10,7 +10,7 @@
       <div class="main-content col h-100">
         <div class="header d-flex">
           <img
-            class="back-icon"
+            class="back-icon cursor-hand"
             src="https://upload.cc/i1/2020/12/24/oBeWkX.png"
             alt="backIcon"
             @click="$router.go(-1)"
@@ -21,7 +21,7 @@
         <div class="twitter-bar d-flex flex-column w-100" v-else>
           <div class="twitter-bar-container">
             <div
-              class="profile-detail-bar d-flex"
+              class="profile-detail-bar d-flex cursor-hand"
               @click="profileLink(UserProfile.UserId)"
             >
               <img
