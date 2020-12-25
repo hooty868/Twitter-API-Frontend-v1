@@ -53,7 +53,7 @@
             <div class="detail">
               <div class="name mr-1">{{ tweet.User.name }}</div>
               <div class="account mr-1">{{ tweet.User.account }}</div>
-              <div class="creat-time">{{ tweet.createdAt }}</div>
+              <div class="creat-time">{{ tweet.createdAt | fromNow }}</div>
             </div>
             <div class="tweet">
               {{ tweet.description | printString }}
@@ -75,8 +75,10 @@
 <script>
 import adminAPI from "../apis/admin";
 import { Toast } from "./../utils/helpers";
+import { fromNowFilter } from "./../utils/mixins";
 
 export default {
+  mixins: [fromNowFilter],
   data() {
     return {
       tweets: [],
