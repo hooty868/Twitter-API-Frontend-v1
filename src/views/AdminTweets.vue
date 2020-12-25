@@ -22,7 +22,7 @@
           <div class="pannel-icon-container d-flex">
             <img
               class="pannel-icon"
-              src="https://upload.cc/i1/2020/12/24/RFLOhD.png"
+              src="https://upload.cc/i1/2020/12/24/T9gfR2.png"
               alt="Profile"
             />
             <h1 class="pannel-icon-text">使用者列表</h1>

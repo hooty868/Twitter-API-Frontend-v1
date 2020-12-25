@@ -60,7 +60,7 @@
                 <div class="d-flex align-items-center mr-2">
                   <img
                     class="profile_icon"
-                    src="https://upload.cc/i1/2020/12/24/6SJqIC.png"
+                    src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
                     alt=""
                   />
                   <p>{{ user.LikedCount }}</p>
