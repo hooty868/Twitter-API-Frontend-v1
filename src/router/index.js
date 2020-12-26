@@ -15,6 +15,11 @@ const routes = [
     redirect: '/signin'
   },
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/chat.vue')
+  },
+  {
     path: '/signin',
     name: 'sign-in',
     component: SignIn
