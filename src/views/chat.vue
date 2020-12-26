@@ -142,6 +142,7 @@ export default {
     },
     submit() {
       this.socket.emit("sendMessage", this.user);
+      this.user.message = "";
     },
   },
 };
