@@ -7,14 +7,15 @@
       <div class="main-group col-3 h-100">
         <div class="header"><p>上線使用者(5)</p></div>
         <div class="group-usercards">
-          <div class="user-card d-flex">
-            <img
-              src="https://upload.cc/i1/2020/12/24/EDZPAb.png"
-              alt="avater"
-            />
+          <div
+            class="user-card d-flex"
+            v-for="mes in messagesHistory"
+            :key="mes.id"
+          >
+            <img :src="mes.User.avatar" alt="avater" />
             <div class="user-content d-flex">
-              <p class="user-name">Apple</p>
-              <p class="user-account">@apple</p>
+              <p class="user-name">{{ mes.User.name }}</p>
+              <p class="user-account">@{{ mes.User.account }}</p>
             </div>
           </div>
         </div>
@@ -22,39 +23,37 @@
       <div class="main-conversation col h-100">
         <div class="header"><p>公開聊天室</p></div>
         <div class="main-content">
+          <!-- 上線訊息 -->
           <div class="user-online">
-            <p>apple 上線</p>
+            <p>{{ online }}</p>
           </div>
-          <div class="user-online">
-            <p>cooper 上線</p>
-          </div>
-          <div class="conversation-content js-start">
-            <img
-              src="https://upload.cc/i1/2020/12/24/EDZPAb.png"
-              alt="avatar"
-            />
+
+          <!-- 他人發言 -->
+          <div
+            class="conversation-content js-start"
+            v-for="mes in messageOther"
+            :key="mes.id"
+          >
+            <img :src="mes.User.avatar" alt="avatar" />
             <div class="content-description">
               <p class="description-text bg-grey">
-                這個階段需要搭配自己的專案情況來做整合。如果說上一階段的功能可以用
-                copy paste 來完成，那這階段的挑戰就是 copy paste
-                之外還需要深度消化，知道自己在做什麼
+                {{ mes.content }}
               </p>
-              <p class="description-time">下午4:21分</p>
+              <p class="description-time">{{ mes.time }}</p>
             </div>
           </div>
-          <div class="conversation-content js-end">
-            <img
-              src="https://upload.cc/i1/2020/12/24/EDZPAb.png"
-              alt="avatar"
-            />
+          <!-- 自己發言 -->
+          <div
+            class="conversation-content js-end"
+            v-for="mes in messageSelf"
+            :key="mes.id"
+          >
+            <img :src="mes.User.avatar" alt="avatar" />
             <div class="content-description">
               <p class="description-text bg-orange">
-                現階段，不需要保存歷史訊息，使用者一旦重新整理訊息，歷史訊息就會消失
-                也就是說「只有同時在聊天室裡的在線使用者」才能聊天
-                也就是說「只有同時在聊天室裡的在線使用者」才能聊天
-                也就是說「只有同時在聊天室裡的在線使用者」才能聊天
+                {{ mes.content }}
               </p>
-              <p class="description-time">下午4:22分</p>
+              <p class="description-time">{{ mes.time }}</p>
             </div>
           </div>
         </div>
@@ -82,10 +81,11 @@
 <script>
 import Navbar from "./../components/Navbar";
 import { mapState } from "vuex";
-// import { Toast } from "./../utils/helpers";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
+// import socketAuthorizationAPI from "./../apis/socketAuthorization";
+import axios from "axios";
 
-const getToken = () => localStorage.getItem("token");
+// const token = localStorage.getItem("token")
 
 export default {
   components: {
@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       // 上線訊息
-      greeting: [],
+      online: "",
       // 下線訊息
       offline: [],
       //放自己的發言
@@ -115,30 +115,53 @@ export default {
         id: -1,
       },
       status: "status1",
+      account: "",
+      token: "",
     };
   },
 
   created() {
-    this.socket = io("https://socket-go.herokuapp.com", {
-      reconnectionDelayMax: 10000,
-      query: { token: `Bearer ${getToken()}` },
-    });
+    axios
+      .post("https://socket-go.herokuapp.com/api/login", {
+        account: this.currentUser.name,
+        password: "12345678",
+      })
+      .then((res) => {
+        this.token = res.data.token;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    // const token = this.token;
+    console.log(this.token);
 
-    this.socket.emit("joinRoom");
-    this.socket.on("userJoin", (msg) => {
-      console.log(msg);
-      this.greeting.push(msg);
+    this.socket = io("https://socket-go.herokuapp.com/", {
+      query: {
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTAxMTAxOX0.ls4PMCm2nYIr-aQhO_AVJr7uXYCHqmp_UnIDbAdTkjw",
+      },
     });
+    this.socket.emit("joinRoom");
+
     this.socket.on("loadMessages", (historyMessages) => {
-      console.log(historyMessages);
-      this.messagesHistory.push(historyMessages);
+      this.messagesHistory = historyMessages;
     });
 
     this.fetchUser();
   },
+
   mounted() {
+    this.socket.on("userJoin", (msg) => {
+      console.log(msg);
+      this.online = msg;
+    });
     this.socket.on("serverMessage", (serverMessage) => {
       console.log(serverMessage);
+      if (serverMessage.User.name === this.currentUser.name) {
+        this.messageSelf.push(serverMessage);
+      } else {
+        this.messageOther.push(serverMessage);
+      }
     });
   },
   computed: {
@@ -146,11 +169,12 @@ export default {
   },
   methods: {
     submit() {
-      // this.socket.emit("userMessage", this.user.message);
-      // this.user.message = "";
+      this.socket.emit("userMessage", this.user.message);
+      this.user.message = "";
     },
     fetchUser() {
       this.user.name = this.currentUser.name;
+      this.account = this.currentUser.name;
       this.user.id = this.currentUser.id;
     },
   },
