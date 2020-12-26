@@ -83,7 +83,6 @@ export default {
           password: this.password,
         });
         const { data } = response;
-        console.log(data);
         if (data.status !== "success" || data.user.role !== "user") {
           throw new Error(data.message);
         }
