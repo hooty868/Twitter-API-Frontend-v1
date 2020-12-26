@@ -1,4 +1,5 @@
 import { apiHelper } from './../utils/helpers'
+import { apiSocket } from './../utils/helpers'
 const getToken = () => localStorage.getItem('token')
 
 
@@ -48,4 +49,10 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  socket() {
+    return apiSocket.get(`/`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+
 }

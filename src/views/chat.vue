@@ -115,6 +115,7 @@ export default {
     };
   },
   created() {
+    // https://socket-go.herokuapp.com/
     this.socket = io("http://localhost:3000");
     this.fetchUser();
   },

@@ -51,6 +51,8 @@
               <p class="description-text bg-orange">
                 現階段，不需要保存歷史訊息，使用者一旦重新整理訊息，歷史訊息就會消失
                 也就是說「只有同時在聊天室裡的在線使用者」才能聊天
+                也就是說「只有同時在聊天室裡的在線使用者」才能聊天
+                也就是說「只有同時在聊天室裡的在線使用者」才能聊天
               </p>
               <p class="description-time">下午4:22分</p>
             </div>
@@ -58,15 +60,19 @@
         </div>
         <div class="footer">
           <input
+            v-model="user.message"
             id="message"
             type="text"
             name="message"
-            v-model="message"
             autocomplete="message"
             placeholder="輸入訊息..."
             required
           />
-          <img src="https://upload.cc/i1/2020/12/26/G6Kzb9.png" alt="output" />
+          <img
+            @click="submit"
+            src="https://upload.cc/i1/2020/12/26/G6Kzb9.png"
+            alt="output"
+          />
         </div>
       </div>
     </div>
@@ -75,14 +81,11 @@
 
 <script>
 import Navbar from "./../components/Navbar";
-// import Followers from "./../components/followers";
-// import twitterList from "./../components/twitterList";
-// import Spinner from "./../components/Spinner";
-import twitterAPI from "./../apis/twitter";
-import userAPI from "./../apis/users";
-import followerAPI from "./../apis/followers";
 import { mapState } from "vuex";
-import { Toast } from "./../utils/helpers";
+// import { Toast } from "./../utils/helpers";
+import io from "socket.io-client";
+
+const getToken = () => localStorage.getItem("token");
 
 export default {
   components: {
@@ -91,99 +94,79 @@ export default {
     // Followers,
     // twitterList,
   },
+  data() {
+    return {
+      // 上線訊息
+      greeting: [],
+      // 下線訊息
+      offline: [],
+      //放自己的發言
+      messageSelf: [],
+      //放其他人的發言
+      messageOther: [],
+      //放上線的人
+      userOn: [],
+      //放歷史訊息
+      messagesHistory: [],
+      socket: {},
+      user: {
+        message: "",
+        name: "",
+        id: -1,
+      },
+      status: "status1",
+    };
+  },
+
   created() {
-    this.fetchtwitterList();
-    this.fetchUserprofile();
-    this.fetchFollowerList();
+    this.socket = io("https://socket-go.herokuapp.com", {
+      reconnectionDelayMax: 10000,
+      query: { token: `Bearer ${getToken()}` },
+    });
+
+    this.socket.emit("joinRoom");
+    this.socket.on("userJoin", (msg) => {
+      console.log(msg);
+      this.greeting.push(msg);
+    });
+    this.socket.on("loadMessages", (historyMessages) => {
+      console.log(historyMessages);
+      this.messagesHistory.push(historyMessages);
+    });
+
+    this.fetchUser();
+  },
+  mounted() {
+    this.socket.on("serverMessage", (serverMessage) => {
+      console.log(serverMessage);
+    });
   },
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
   methods: {
-    async fetchtwitterList() {
-      try {
-        const response = await twitterAPI.TwitterAll();
-        this.twitters = response.data;
-      } catch (error) {
-        console.log("error", error);
-        Toast.fire({
-          icon: "warning",
-          title: error,
-        });
-      }
+    submit() {
+      // this.socket.emit("userMessage", this.user.message);
+      // this.user.message = "";
     },
-    async fetchUserprofile() {
-      try {
-        const Newdata = await userAPI.getCurrentUser();
-        const userId = Newdata.data.id;
-        this.UserId = userId;
-        const response = await userAPI.UserProfile(userId);
-        this.UserProfile = response.data;
-        this.isLoading = false;
-      } catch (error) {
-        this.isLoading = false;
-        console.log("error", error);
-        Toast.fire({
-          icon: "warning",
-          title: error,
-        });
-      }
+    fetchUser() {
+      this.user.name = this.currentUser.name;
+      this.user.id = this.currentUser.id;
     },
-    async fetchFollowerList() {
-      try {
-        const response = await followerAPI.TopUsers();
-        this.followerlist = response.data;
-        this.isLoading = false;
-      } catch (error) {
-        console.log("error", error);
-        Toast.fire({
-          icon: "warning",
-          title: error,
-        });
-      }
-    },
-  },
-  data() {
-    return {
-      isLoading: true,
-      status: "status1",
-      message: "",
-      UserId: "",
-      UserProfile: {},
-      repliedTwitter: {
-        id: -1,
-        User: {
-          id: 14,
-          account: "bmw",
-          name: "BMW",
-          email: "BMW@example.com",
-          avatar: "https://i.pravatar.cc/300",
-          cover: "https://i.pravatar.cc/300",
-          isFollowed: true,
-          introduction: "hello world!",
-          followerCount: 1,
-          followingCount: 3,
-        },
-        repliedCount: -1,
-        followedCount: -1,
-        createdAt: "",
-        updatedAt: "",
-        isliked: true,
-        description: "",
-      },
-      twitters: [],
-      followerlist: [],
-    };
   },
 };
 </script>
+
 <style scoped>
 .container {
   margin: 0 auto 0 auto;
+  max-height: 800px;
 }
 .setting-pannel {
   width: auto;
 }
+
+/* 上線使用者 */
 .main-group {
   width: 350px;
   padding: 0;
@@ -243,6 +226,8 @@ export default {
   line-height: 22px;
   color: #657786;
 }
+
+/* 聊天室 */
 .main-conversation {
   width: 1200px;
   padding: 0;
@@ -271,6 +256,7 @@ export default {
   height: 1100px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
 }
 .user-online {
   align-content: center;
