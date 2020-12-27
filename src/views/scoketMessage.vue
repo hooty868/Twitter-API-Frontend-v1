@@ -83,9 +83,15 @@ import Navbar from "./../components/Navbar";
 import { mapState } from "vuex";
 import { io } from "socket.io-client";
 // import socketAuthorizationAPI from "./../apis/socketAuthorization";
-import axios from "axios";
+// import axios from "axios";
 
 // const token = localStorage.getItem("token")
+const socket = io("https://socket-go.herokuapp.com/", {
+  query: {
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImlhdCI6MTYwOTA0NzcxM30.9nxKbp4k3FreDkbYsikTtbYEUeW5HTyTJxDZ0BoQcF0",
+  },
+});
 
 export default {
   components: {
@@ -121,40 +127,39 @@ export default {
   },
 
   created() {
-    axios
-      .post("https://socket-go.herokuapp.com/api/login", {
-        account: this.currentUser.name,
-        password: "12345678",
-      })
-      .then((res) => {
-        this.token = res.data.token;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    // const token = this.token;
-    console.log(this.token);
-
-    this.socket = io("https://socket-go.herokuapp.com/", {
-      query: {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTAxMTAxOX0.ls4PMCm2nYIr-aQhO_AVJr7uXYCHqmp_UnIDbAdTkjw",
-      },
-    });
+    this.socket = socket;
     this.socket.emit("joinRoom");
 
-    this.socket.on("loadMessages", (historyMessages) => {
-      this.messagesHistory = historyMessages;
-    });
+    //   axios
+    //     .post("https://socket-go.herokuapp.com/api/login", {
+    //       account: this.currentUser.name,
+    //       password: "12345678",
+    //     })
+    //     .then((res) => {
+    //       this.token = res.data.token;
+    //       console.log(this.token);
+    //       return res.data.token;
+    //     })
 
-    this.fetchUser();
+    //     .catch((error) => {
+    //       console.error(error);
+    //     });
+    //   // const token = this.token;
+    //   console.log(this.token);
+
+    //   this.fetchUser();
   },
 
   mounted() {
+    this.socket.on("loadMessages", (historyMessages) => {
+      console.log(historyMessages);
+    });
+
     this.socket.on("userJoin", (msg) => {
       console.log(msg);
       this.online = msg;
     });
+
     this.socket.on("serverMessage", (serverMessage) => {
       console.log(serverMessage);
       if (serverMessage.User.name === this.currentUser.name) {
