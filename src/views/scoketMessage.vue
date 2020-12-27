@@ -5,17 +5,15 @@
         <Navbar :navbar-status="status" />
       </div>
       <div class="main-group col-3 h-100">
-        <div class="header"><p>上線使用者(5)</p></div>
+        <div class="header">
+          <p>上線使用者({{ onlinePeople }})</p>
+        </div>
         <div class="group-usercards">
-          <div
-            class="user-card d-flex"
-            v-for="mes in messagesHistory"
-            :key="mes.id"
-          >
-            <img :src="mes.User.avatar" alt="avater" />
+          <div class="user-card d-flex" v-for="mes in userOn" :key="mes.id">
+            <img :src="mes.avatar" alt="avater" />
             <div class="user-content d-flex">
-              <p class="user-name">{{ mes.User.name }}</p>
-              <p class="user-account">@{{ mes.User.account }}</p>
+              <p class="user-name">{{ mes.name }}</p>
+              <p class="user-account">@{{ mes.account }}</p>
             </div>
           </div>
         </div>
@@ -23,42 +21,65 @@
       <div class="main-conversation col h-100">
         <div class="header"><p>公開聊天室</p></div>
         <div class="main-content">
+          <!-- 歷史訊息 -->
+          <div v-for="mes in messagesHistory" :key="mes.id">
+            <div
+              v-if="mes.User.name !== user.name"
+              class="conversation-content js-start"
+            >
+              <img :src="mes.User.avatar" alt="avatar" />
+              <div class="content-description">
+                <p class="description-text bg-grey">
+                  {{ mes.content }}
+                </p>
+                <p class="description-time">{{ mes.time }}</p>
+              </div>
+            </div>
+            <div v-else class="conversation-content js-end">
+              <img :src="mes.User.avatar" alt="avatar" />
+              <div class="content-description">
+                <p class="description-text bg-orange">
+                  {{ mes.content }}
+                </p>
+                <p class="description-time">{{ mes.time }}</p>
+              </div>
+            </div>
+          </div>
           <!-- 上線訊息 -->
           <div class="user-online">
             <p>{{ online }}</p>
+            <p v-for="off in offline" :key="off.id">{{ off }}</p>
           </div>
-
-          <!-- 他人發言 -->
-          <div
-            class="conversation-content js-start"
-            v-for="mes in messageOther"
-            :key="mes.id"
-          >
-            <img :src="mes.User.avatar" alt="avatar" />
-            <div class="content-description">
-              <p class="description-text bg-grey">
-                {{ mes.content }}
-              </p>
-              <p class="description-time">{{ mes.time }}</p>
+          <!-- 即時訊息 -->
+          <div v-for="mes in messages" :key="mes.id">
+            <!-- 他人發言 -->
+            <div
+              v-if="mes.User.name !== user.name"
+              class="conversation-content js-start"
+            >
+              <img :src="mes.User.avatar" alt="avatar" />
+              <div class="content-description">
+                <p class="description-text bg-grey">
+                  {{ mes.content }}
+                </p>
+                <p class="description-time">{{ mes.time }}</p>
+              </div>
             </div>
-          </div>
-          <!-- 自己發言 -->
-          <div
-            class="conversation-content js-end"
-            v-for="mes in messageSelf"
-            :key="mes.id"
-          >
-            <img :src="mes.User.avatar" alt="avatar" />
-            <div class="content-description">
-              <p class="description-text bg-orange">
-                {{ mes.content }}
-              </p>
-              <p class="description-time">{{ mes.time }}</p>
+            <!-- 自己發言 -->
+            <div v-else class="conversation-content js-end">
+              <img :src="mes.User.avatar" alt="avatar" />
+              <div class="content-description">
+                <p class="description-text bg-orange">
+                  {{ mes.content }}
+                </p>
+                <p class="description-time">{{ mes.time }}</p>
+              </div>
             </div>
           </div>
         </div>
         <div class="footer">
           <input
+            v-on:keyup.enter="submit"
             v-model="user.message"
             id="message"
             type="text"
@@ -86,10 +107,11 @@ import { io } from "socket.io-client";
 // import axios from "axios";
 
 // const token = localStorage.getItem("token")
+const newtoken = localStorage.getItem("tokenNew");
+
 const socket = io("https://socket-go.herokuapp.com/", {
   query: {
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImlhdCI6MTYwOTA0NzcxM30.9nxKbp4k3FreDkbYsikTtbYEUeW5HTyTJxDZ0BoQcF0",
+    token: newtoken,
   },
 });
 
@@ -106,14 +128,14 @@ export default {
       online: "",
       // 下線訊息
       offline: [],
-      //放自己的發言
-      messageSelf: [],
-      //放其他人的發言
-      messageOther: [],
+      messages: [],
       //放上線的人
       userOn: [],
       //放歷史訊息
       messagesHistory: [],
+      messagesHistorySelf: [],
+      messagesHistoryOther: [],
+      onlinePeople: "",
       socket: {},
       user: {
         message: "",
@@ -129,27 +151,38 @@ export default {
   created() {
     this.socket = socket;
     this.socket.emit("joinRoom");
+    this.fetchUser();
   },
 
   mounted() {
     this.socket.on("loadMessages", (historyMessages) => {
-      console.log(historyMessages);
+      historyMessages.map((mes) => {
+        if (mes.User.name === this.currentUser.name) {
+          this.messagesHistorySelf.push(mes);
+        } else {
+          this.messagesHistoryOther.push(mes);
+        }
+      });
+      this.messagesHistory = historyMessages;
+    });
+
+    this.socket.on("currentUsers", (data) => {
+      this.userOn = data.userList;
+      this.onlinePeople = data.usersCount;
     });
 
     this.socket.on("userJoin", (msg) => {
-      console.log(msg);
       this.online = msg;
     });
 
     this.socket.on("serverMessage", (serverMessage) => {
-      console.log(serverMessage);
-      if (serverMessage.User.name === this.currentUser.name) {
-        this.messageSelf.push(serverMessage);
-      } else {
-        this.messageOther.push(serverMessage);
-      }
+      this.messages.push(serverMessage);
+    });
+    this.socket.on("userLeave", (leaveMes) => {
+      this.offline.push(leaveMes);
     });
   },
+
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
@@ -210,6 +243,7 @@ export default {
   margin-left: 8px;
   height: 50px;
   width: 50px;
+  border-radius: 50%;
 }
 .user-card .user-content {
   height: 22px;
@@ -245,6 +279,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px #e6ecf0 solid;
+  min-height: 0px;
 }
 .main-conversation .header {
   width: 100%;
@@ -267,7 +302,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  overflow-y: scroll;
 }
+
 .user-online {
   align-content: center;
   justify-content: center;
@@ -300,6 +337,7 @@ export default {
   height: 50px;
   width: 50px;
   margin-right: 20px;
+  border-radius: 50%;
 }
 .conversation-content p {
   margin: 0;
