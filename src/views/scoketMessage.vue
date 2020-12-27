@@ -108,7 +108,7 @@ import { io } from "socket.io-client";
 // const token = localStorage.getItem("token")
 const newtoken = localStorage.getItem("token");
 
-const socket = io("https://socket-go.herokuapp.com/", {
+const socket = io("https://simple-twitter-2020.herokuapp.com/", {
   query: {
     token: newtoken,
   },
