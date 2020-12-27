@@ -20,11 +20,11 @@
       </div>
       <div class="main-conversation col h-100">
         <div class="header"><p>公開聊天室</p></div>
-        <div class="main-content" id="main-content">
+        <div class="main-content mt-2" id="main-content">
           <!-- 歷史訊息 -->
           <div v-for="mes in messagesHistory" :key="mes.id">
             <div
-              v-if="mes.User.name !== user.name"
+              v-if="mes.User.id !== user.id"
               class="conversation-content js-start"
             >
               <img :src="mes.User.avatar" alt="avatar" />
@@ -53,7 +53,7 @@
           <div v-for="mes in messages" :key="mes.id">
             <!-- 他人發言 -->
             <div
-              v-if="mes.User.name !== user.name"
+              v-if="mes.User.id !== user.id"
               class="conversation-content js-start"
             >
               <img :src="mes.User.avatar" alt="avatar" />
@@ -106,7 +106,7 @@ import { io } from "socket.io-client";
 // import axios from "axios";
 
 // const token = localStorage.getItem("token")
-const newtoken = localStorage.getItem("tokenNew");
+const newtoken = localStorage.getItem("token");
 
 const socket = io("https://socket-go.herokuapp.com/", {
   query: {
@@ -156,7 +156,7 @@ export default {
   mounted() {
     this.socket.on("loadMessages", (historyMessages) => {
       historyMessages.map((mes) => {
-        if (mes.User.name === this.currentUser.name) {
+        if (mes.User.id === this.currentUser.id) {
           this.messagesHistorySelf.push(mes);
         } else {
           this.messagesHistoryOther.push(mes);
@@ -171,7 +171,7 @@ export default {
     });
 
     this.socket.on("userJoin", (msg) => {
-      this.online = msg;
+      this.offline.push(msg);
     });
 
     this.socket.on("serverMessage", (serverMessage) => {
