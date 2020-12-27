@@ -87,6 +87,15 @@ export default {
           throw new Error(data.message);
         }
         localStorage.setItem("token", data.token);
+        // console.log(data.token);
+
+        const responseSecond = await authorizationAPI.socketSignIn({
+          account: this.account,
+          password: this.password,
+        });
+
+        const token = responseSecond.data.token;
+        localStorage.setItem("tokenNew", token);
 
         this.$store.commit("setCurrentUser", data.user);
 
