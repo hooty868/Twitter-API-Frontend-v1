@@ -57,6 +57,7 @@
 <script>
 import authorizationAPI from "./../apis/authorization";
 import { Toast } from "./../utils/helpers";
+import axios from "axios";
 
 export default {
   data() {
@@ -87,6 +88,26 @@ export default {
           throw new Error(data.message);
         }
         localStorage.setItem("token", data.token);
+        // console.log(data.token);
+        axios
+          .post("https://socket-go.herokuapp.com/api/login", {
+            account: this.account,
+            password: this.password,
+          })
+          .then((res) => {
+            localStorage.setItem("tokenNew", res.data.token);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        // const responseSecond = await authorizationAPI.socketSignIn({
+        //   account: this.account,
+        //   password: this.password,
+        // });
+
+        // const token = responseSecond.data.token;
+        // localStorage.setItem("tokenNew", token);
+
         this.$store.commit("setCurrentUser", data.user);
 
         this.$router.push("/main");
