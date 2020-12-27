@@ -2,7 +2,7 @@
 <template>
   <div class="container py-5 w-100">
     <form class="w-100" @submit.prevent.stop="handleSubmit">
-      <img alt="logo" src="/image/Logo.png" />
+      <img alt="logo" src="https://upload.cc/i1/2020/12/24/MLqwE5.png" />
 
       <div class="mb-4">
         <h1 class="h3 mb-3 font-weight-normal">後台登入</h1>

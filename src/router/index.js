@@ -10,9 +10,19 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/message',
+    name: 'message',
+    component: () => import('../views/scoketMessage.vue')
+  },
+  {
     path: '/',
     name: 'root',
     redirect: '/signin'
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/chat.vue')
   },
   {
     path: '/signin',

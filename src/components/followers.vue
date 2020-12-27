@@ -253,5 +253,6 @@ export default {
   position: absolute;
   bottom: 12px;
   left: 15px;
+  cursor: pointer;
 }
 </style>
