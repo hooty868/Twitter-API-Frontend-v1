@@ -102,17 +102,17 @@
 <script>
 import Navbar from "./../components/Navbar";
 import { mapState } from "vuex";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 // import socketAuthorizationAPI from "./../apis/socketAuthorization";
 // import axios from "axios";
 
 // const token = localStorage.getItem("token")
-const newtoken = localStorage.getItem("tokenNew");
+// const newtoken = localStorage.getItem("tokenNew");
 
 const socket = io("https://socket-go.herokuapp.com/", {
-  query: {
-    token: newtoken,
-  },
+  // query: {
+  //   token: newtoken,
+  // },
 });
 
 export default {
