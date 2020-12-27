@@ -81,17 +81,6 @@
 <script>
 import Navbar from "./../components/Navbar";
 import { mapState } from "vuex";
-import io from "socket.io-client";
-// import socketAuthorizationAPI from "./../apis/socketAuthorization";
-// import axios from "axios";
-
-// const token = localStorage.getItem("token")
-const socket = io("https://socket-go.herokuapp.com/", {
-  query: {
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTA0ODI1MH0.GnOzkLD9mHNuFJKTSq88w_MCkydLxrSxckFi59z2t4E",
-  },
-});
 
 export default {
   components: {
@@ -126,44 +115,13 @@ export default {
     };
   },
 
-  created() {
-    this.socket = socket;
-    this.socket.emit("joinRoom");
-  },
+  created() {},
 
-  mounted() {
-    this.socket.on("loadMessages", (historyMessages) => {
-      console.log(historyMessages);
-    });
-
-    this.socket.on("userJoin", (msg) => {
-      console.log(msg);
-      this.online = msg;
-    });
-
-    this.socket.on("serverMessage", (serverMessage) => {
-      console.log(serverMessage);
-      if (serverMessage.User.name === this.currentUser.name) {
-        this.messageSelf.push(serverMessage);
-      } else {
-        this.messageOther.push(serverMessage);
-      }
-    });
-  },
+  mounted() {},
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
-  methods: {
-    submit() {
-      this.socket.emit("userMessage", this.user.message);
-      this.user.message = "";
-    },
-    fetchUser() {
-      this.user.name = this.currentUser.name;
-      this.account = this.currentUser.name;
-      this.user.id = this.currentUser.id;
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -267,6 +225,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  overflow-y: scroll;
 }
 .user-online {
   align-content: center;
