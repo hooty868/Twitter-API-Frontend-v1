@@ -20,7 +20,7 @@
       </div>
       <div class="main-conversation col h-100">
         <div class="header"><p>公開聊天室</p></div>
-        <div class="main-content">
+        <div class="main-content" id="main-content">
           <!-- 歷史訊息 -->
           <div v-for="mes in messagesHistory" :key="mes.id">
             <div
@@ -47,7 +47,6 @@
           </div>
           <!-- 上線訊息 -->
           <div class="user-online">
-            <p>{{ online }}</p>
             <p v-for="off in offline" :key="off.id">{{ off }}</p>
           </div>
           <!-- 即時訊息 -->
@@ -181,11 +180,16 @@ export default {
     this.socket.on("userLeave", (leaveMes) => {
       this.offline.push(leaveMes);
     });
+    this.scrollToEnd();
+  },
+  updated() {
+    this.scrollToEnd();
   },
 
   computed: {
     ...mapState(["currentUser", "isAuthenticated"]),
   },
+
   methods: {
     submit() {
       this.socket.emit("userMessage", this.user.message);
@@ -195,6 +199,10 @@ export default {
       this.user.name = this.currentUser.name;
       this.account = this.currentUser.name;
       this.user.id = this.currentUser.id;
+    },
+    scrollToEnd() {
+      var mainContent = this.$el.querySelector("#main-content");
+      mainContent.scrollTop = mainContent.scrollHeight;
     },
   },
 };
@@ -299,9 +307,6 @@ export default {
 .main-conversation .main-content {
   width: 100%;
   height: 1100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   overflow-y: scroll;
 }
 
