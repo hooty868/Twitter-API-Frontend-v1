@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "node dist/app.js",
-    "server": "node severs/app.js"
+    "server": "node dist/app.js"
   },
   "dependencies": {
     "axios": "^0.21.0",

@@ -89,7 +89,7 @@ import io from "socket.io-client";
 const socket = io("https://socket-go.herokuapp.com/", {
   query: {
     token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImlhdCI6MTYwOTA0NzcxM30.9nxKbp4k3FreDkbYsikTtbYEUeW5HTyTJxDZ0BoQcF0",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTA0ODI1MH0.GnOzkLD9mHNuFJKTSq88w_MCkydLxrSxckFi59z2t4E",
   },
 });
 
