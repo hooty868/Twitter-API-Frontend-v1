@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-const baseURL = 'https://socket-go.herokuapp.com/api'
+const baseURL = 'https://simple-twitter-2020.herokuapp.com/'
 const socketURL = 'https://socket-go.herokuapp.com/api'
 
 
