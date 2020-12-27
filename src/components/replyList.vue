@@ -6,13 +6,16 @@
       :key="twitter.id"
     >
       <img
-        class="card-avater"
+        class="card-avater cursor-hand"
         :src="twitter.User.avatar"
         alt="avater"
         @click="profileLink(twitter.UserId)"
       />
       <div class="card-content flex-grow-1">
-        <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
+        <div
+          class="content-title d-flex cursor-hand"
+          @click="profileLink(twitter.UserId)"
+        >
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
           <p class="comment-date">{{ twitter.createdAt | fromNow }}</p>

@@ -63,7 +63,7 @@
                   <div class="icon-wrapper">
                     <img
                       v-if="user.isFollowed"
-                      src="https://upload.cc/i1/2020/12/24/ptRQJO.png"
+                      src="https://upload.cc/i1/2020/12/25/dqlj9O.png"
                       alt=""
                     />
                     <img
@@ -316,6 +316,7 @@
             </div>
             <div class="text-input">
               <div class="form-label-group mb-2 input-name">
+                <div class="input-type-name">名稱</div>
                 <input
                   v-model="user.name"
                   id="name"
@@ -326,9 +327,11 @@
                   required
                   autofocus
                 />
+                <div class="text-count-name">{{ user.name.length }}/50</div>
               </div>
 
               <div class="form-label-group mb-3 input-intro">
+                <div class="input-type-intro">自我介紹</div>
                 <textarea
                   v-model="user.introduction"
                   name="introduction"
@@ -338,6 +341,9 @@
                   required
                 >
                 </textarea>
+                <div class="text-count-intro">
+                  {{ user.introduction.length }}/160
+                </div>
               </div>
             </div>
             <button type="submit" class="save btn btn-primary">儲存</button>
@@ -497,7 +503,6 @@ export default {
         this.editUser.avatar = imageURL;
       }
     },
-
     showTweets() {
       this.showContent.tweets = true;
       this.showContent.reply = false;
@@ -569,11 +574,15 @@ export default {
 .navbar {
   margin: 0 25px auto auto;
 }
+
+/* main-content */
 .main-content {
   width: 600px;
   padding: 0;
   border: 1px #e6ecf0 solid;
 }
+
+/* main-content > header */
 .main-content .header {
   width: 100%;
   height: 55px;
@@ -581,10 +590,14 @@ export default {
   align-items: center;
 }
 
-.main-content .header img:hover {
+.main-content .header img {
   cursor: pointer;
   width: 18px;
   height: 18px;
+}
+.main-content .header img:hover {
+  opacity: 0.5;
+  transition: transform 0.2s ease-out;
 }
 
 .header-content {
@@ -601,6 +614,7 @@ export default {
   color: #657786;
 }
 
+/* main-content > user-info */
 .user-info {
   width: 100%;
 }
@@ -659,6 +673,11 @@ export default {
   color: black;
 }
 
+.follow-detail .button-link:hover {
+  border: #657786;
+  color: #657786;
+}
+
 .follow-detail span {
   color: #657786;
 }
@@ -673,6 +692,9 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+.detail .edit-button .edit:hover {
+  background: #ffeedd;
 }
 
 .detail .edit .icon-wrapper {
@@ -697,6 +719,10 @@ export default {
   outline: none;
 }
 
+.detail .edit .follow-btn:hover {
+  background: #ffeedd;
+}
+
 .detail .edit .follower-btn {
   width: 122px;
   height: 40px;
@@ -708,11 +734,17 @@ export default {
   outline: none;
 }
 
+.detail .edit .follower-btn:hover {
+  background: #c44f00;
+}
+
 .detail .edit {
   position: absolute;
   right: 30px;
   top: 10px;
 }
+
+/* main-content > user-tweet */
 
 .user-tweet {
   width: 100%;
@@ -734,6 +766,11 @@ export default {
   cursor: pointer;
 }
 
+.content-control .content:hover {
+  background: #ffeedd;
+  color: #ff6600;
+}
+
 .content-control .active {
   color: #ff6600;
   border-bottom: 2px solid #ff6600;
@@ -743,6 +780,7 @@ export default {
   max-height: 600px;
   overflow-y: scroll;
 }
+
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;
@@ -750,6 +788,11 @@ export default {
   display: flex;
   flex-direction: row;
   padding: 15px 0 0 13px;
+  cursor: pointer;
+}
+
+.card:hover {
+  background: #f0f0f0;
 }
 
 .card .content {
@@ -873,10 +916,12 @@ export default {
 
 .modal-content #name {
   height: 54px;
+  padding: 10px 0 0 5px;
 }
 
 .modal-content #introduction {
   height: 150px;
+  padding: 20px 0 0 5px;
 }
 
 .modal-content input::placeholder {
@@ -890,6 +935,12 @@ export default {
 .edit-icon {
   width: 20px;
   height: 20px;
+}
+
+.edit-icon:hover {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
 }
 
 .avatar .edit-icon {
@@ -924,5 +975,57 @@ export default {
   position: absolute;
   right: 15px;
   top: 12px;
+}
+
+.modal-content form .save:hover {
+  background: #c44f00;
+}
+
+.modal-content .text-input .text-count-name,
+.modal-content .text-input .text-count-intro {
+  color: #657786;
+  width: 32px;
+  height: 22px;
+}
+
+.modal-content .text-input .input-type-name,
+.modal-content .text-input .input-type-intro {
+  color: #657786;
+  width: 100%;
+  height: 15px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.modal-content .text-input .input-name {
+  position: relative;
+}
+
+.modal-content .text-input .input-intro {
+  position: relative;
+  margin-top: 43px;
+}
+
+.modal-content .text-input .text-count-name {
+  position: absolute;
+  right: 5px;
+  bottom: -22px;
+}
+.modal-content .text-input .text-count-intro {
+  position: absolute;
+  right: 10px;
+  bottom: -22px;
+}
+
+.modal-content .text-input .input-type-name {
+  position: absolute;
+  top: 0%;
+  left: 5px;
+}
+
+.modal-content .text-input .input-type-intro {
+  position: absolute;
+  top: 0%;
+  left: 5px;
 }
 </style>

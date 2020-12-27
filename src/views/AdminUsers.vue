@@ -3,27 +3,39 @@
     <nav class="d-flex flex-column justify-content-between align-items-center">
       <div class="top-items">
         <div class="logo-container">
-          <img class="logo" src="/image/Logo.png" alt="Logo" />
+          <img
+            class="logo"
+            src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
+            alt="Logo"
+          />
         </div>
 
         <router-link to="/admin/tweets">
           <div class="pannel-icon-container chosen d-flex">
-            <img class="pannel-icon" src="/image/icon_index.png" alt="Index" />
+            <img
+              class="pannel-icon"
+              src="https://upload.cc/i1/2020/12/24/N9vPcY.png"
+              alt="Index"
+            />
             <h1 class="pannel-icon-text">推文清單</h1>
           </div>
         </router-link>
         <div class="pannel-icon-container d-flex">
           <img
             class="pannel-icon"
-            src="/image/icon_profile_orange.png"
+            src="https://upload.cc/i1/2020/12/24/RFLOhD.png"
             alt="Profile"
           />
           <h1 class="pannel-icon-text chosen">使用者列表</h1>
         </div>
       </div>
       <div>
-        <div class="d-flex align-items-center">
-          <img class="pannel-icon m-3" src="/image/logout@2x.png" alt="Index" />
+        <div class="d-flex align-items-center" @click="logout">
+          <img
+            class="pannel-icon m-3"
+            src="https://upload.cc/i1/2020/12/24/6SJqIC.png"
+            alt="Index"
+          />
           <a href="#" class="text-center text-dark">登出</a>
         </div>
       </div>
@@ -46,13 +58,17 @@
               <p class="account">{{ user.account }}</p>
               <div class="user-detail">
                 <div class="d-flex align-items-center mr-2">
-                  <img class="profile_icon" src="/image/like_icon.png" alt="" />
+                  <img
+                    class="profile_icon"
+                    src="https://upload.cc/i1/2020/12/24/XL7fKH.png"
+                    alt=""
+                  />
                   <p>{{ user.LikedCount }}</p>
                 </div>
                 <div class="d-flex align-items-center mr-2">
                   <img
                     class="profile_icon"
-                    src="/image/reply_icon.png"
+                    src="https://upload.cc/i1/2020/12/24/xfD6YV.png"
                     alt=""
                   />
                   <p>{{ user.tweetCount }}</p>
@@ -86,6 +102,10 @@ export default {
   },
 
   methods: {
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/admin/signin");
+    },
     async fetchData() {
       try {
         // STEP 3: 向伺服器取得餐廳類別清單

@@ -33,6 +33,16 @@
           </h1>
         </div>
       </router-link>
+      <router-link to="/message" class="button-link">
+        <div class="pannel-icon-container d-flex">
+          <img
+            class="pannel-icon"
+            src="https://upload.cc/i1/2020/12/26/hPzOk4.png"
+            alt="message"
+          />
+          <h1 class="pannel-icon-text main">公開訊息</h1>
+        </div>
+      </router-link>
       <router-link
         :to="{ name: 'profile', params: { id: currentuser.id } }"
         class="button-link"

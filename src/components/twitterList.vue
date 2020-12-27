@@ -6,12 +6,12 @@
       :key="twitter.id"
     >
       <img
-        class="card-avater"
+        class="card-avater cursor-hand"
         :src="twitter.User.avatar"
         alt="avater"
         @click="profileLink(twitter.UserId)"
       />
-      <div class="card-content flex-grow-1">
+      <div class="card-content flex-grow-1 cursor-hand">
         <div class="content-title d-flex" @click="profileLink(twitter.UserId)">
           <p class="user-name">{{ twitter.User.name }}</p>
           <p class="user-account">@{{ twitter.User.account }} ·</p>
@@ -327,6 +327,9 @@ export default {
 .comments-card {
   border-bottom: 1px #e6ecf0 solid;
 }
+.comments-card:hover {
+  background: #f0f0f0;
+}
 .card-avater {
   width: 50px;
   height: 50px;
@@ -411,6 +414,10 @@ export default {
 ::-webkit-scrollbar {
   /*隱藏滾輪*/
   display: none;
+}
+.content-text:hover {
+  opacity: 0.5;
+  transition: opacity 0.2s ease-out;
 }
 /* Modal  */
 .modal-content {
