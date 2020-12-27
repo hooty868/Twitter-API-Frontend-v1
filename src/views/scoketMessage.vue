@@ -129,25 +129,6 @@ export default {
   created() {
     this.socket = socket;
     this.socket.emit("joinRoom");
-
-    //   axios
-    //     .post("https://socket-go.herokuapp.com/api/login", {
-    //       account: this.currentUser.name,
-    //       password: "12345678",
-    //     })
-    //     .then((res) => {
-    //       this.token = res.data.token;
-    //       console.log(this.token);
-    //       return res.data.token;
-    //     })
-
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-    //   // const token = this.token;
-    //   console.log(this.token);
-
-    //   this.fetchUser();
   },
 
   mounted() {
