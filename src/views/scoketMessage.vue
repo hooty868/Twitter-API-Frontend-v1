@@ -81,11 +81,15 @@
 <script>
 import Navbar from "./../components/Navbar";
 import { mapState } from "vuex";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 // import socketAuthorizationAPI from "./../apis/socketAuthorization";
-import axios from "axios";
-
-// const token = localStorage.getItem("token")
+// import axios from "axios";
+const socket = io("https://socket-go.herokuapp.com/", {
+  query: {
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTA0NzczNX0.WJ812P9_syo0TKwAD6kuWvvd8PRLPhWCmOBXDaLo-OM",
+  },
+});
 
 export default {
   components: {
@@ -121,26 +125,21 @@ export default {
   },
 
   created() {
-    axios
-      .post("https://socket-go.herokuapp.com/api/login", {
-        account: this.currentUser.name,
-        password: "12345678",
-      })
-      .then((res) => {
-        this.token = res.data.token;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    // const token = this.token;
-    console.log(this.token);
+    // axios
+    //   .post("https://socket-go.herokuapp.com/api/login", {
+    //     account: this.currentUser.name,
+    //     password: "12345678",
+    //   })
+    //   .then((res) => {
+    //     this.token = res.data.token;
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+    // // const token = this.token;
+    // // console.log(this.token);
 
-    this.socket = io("https://socket-go.herokuapp.com/", {
-      query: {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTYwOTAxMTAxOX0.ls4PMCm2nYIr-aQhO_AVJr7uXYCHqmp_UnIDbAdTkjw",
-      },
-    });
+    this.socket = socket;
     this.socket.emit("joinRoom");
 
     this.socket.on("loadMessages", (historyMessages) => {
