@@ -36,7 +36,7 @@
               </div>
             </div>
             <div v-else class="conversation-content js-end">
-              <img :src="mes.User.avatar" alt="avatar" />
+              <!-- <img :src="mes.User.avatar" alt="avatar" /> -->
               <div class="content-description">
                 <p class="description-text bg-orange">
                   {{ mes.content }}
@@ -67,7 +67,7 @@
             </div>
             <!-- 自己發言 -->
             <div v-else class="conversation-content js-end">
-              <img :src="mes.User.avatar" alt="avatar" />
+              <!-- <img :src="mes.User.avatar" alt="avatar" /> -->
               <div class="content-description">
                 <p class="description-text bg-orange">
                   {{ mes.content }}
