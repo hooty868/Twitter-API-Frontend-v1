@@ -325,7 +325,7 @@
                   placeholder="名稱"
                   autocomplete="username"
                   required
-                  autofocus
+                  v-focus
                 />
                 <div class="text-count-name">{{ user.name.length }}/50</div>
               </div>
@@ -351,7 +351,7 @@
               class="save btn btn-primary"
               :disabled="isProcessing"
             >
-              儲存
+              {{ isProcessing ? "儲存中.." : "儲存" }}
             </button>
           </form>
         </div>
@@ -377,12 +377,25 @@ export default {
   },
   data() {
     return {
+      isProcessing: false,
       status: "status2",
       editUser: {
         cover: "",
         avatar: "",
       },
-      user: {},
+      user: {
+        account: "",
+        avatar: "",
+        cover: "",
+        email: "",
+        followerCount: -1,
+        followingCount: -1,
+        id: -1,
+        introduction: "",
+        isFollowed: 0,
+        name: "unsetting",
+        tweetCount: -1,
+      },
       tweets: "",
       likes: "",
       replies: "",
@@ -539,6 +552,11 @@ export default {
     },
     async handleSubmit(e) {
       try {
+        Toast.fire({
+          icon: "info",
+          title: "努力上傳中,請稍候~~",
+        });
+        this.isProcessing = true;
         const form = e.target;
         const formData = new FormData(form);
 
@@ -792,6 +810,11 @@ export default {
   max-height: 650px;
   overflow-y: scroll;
 }
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
+}
+
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;
