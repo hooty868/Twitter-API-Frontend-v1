@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row h-100">
-      <div class="setting-pannel col-3 h-100">
+      <div class="setting-pannel col h-100">
         <Navbar :navbar-status="status" />
       </div>
-      <div class="main-content col h-100">
+      <div class="main-content col-5 h-100">
         <div class="header pl-3">
           <img
             @click="$router.back()"
@@ -227,7 +227,7 @@
           </div>
         </div>
       </div>
-      <div class="main-follower col-4 h-100">
+      <div class="main-follower col h-100">
         <Followers :user-profile="user" :follower-list="followerlist" />
       </div>
     </div>
@@ -325,7 +325,7 @@
                   placeholder="名稱"
                   autocomplete="username"
                   required
-                  autofocus
+                  v-focus
                 />
                 <div class="text-count-name">{{ user.name.length }}/50</div>
               </div>
@@ -346,7 +346,13 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="save btn btn-primary">儲存</button>
+            <button
+              type="submit"
+              class="save btn btn-primary"
+              :disabled="isProcessing"
+            >
+              {{ isProcessing ? "儲存中.." : "儲存" }}
+            </button>
           </form>
         </div>
       </div>
@@ -371,12 +377,25 @@ export default {
   },
   data() {
     return {
+      isProcessing: false,
       status: "status2",
       editUser: {
         cover: "",
         avatar: "",
       },
-      user: {},
+      user: {
+        account: "",
+        avatar: "",
+        cover: "",
+        email: "",
+        followerCount: -1,
+        followingCount: -1,
+        id: -1,
+        introduction: "",
+        isFollowed: 0,
+        name: "unsetting",
+        tweetCount: -1,
+      },
       tweets: "",
       likes: "",
       replies: "",
@@ -532,10 +551,14 @@ export default {
       }
     },
     async handleSubmit(e) {
+      Toast.fire({
+        icon: "info",
+        title: "努力上傳中,請稍候~~",
+      });
       try {
+        this.isProcessing = true;
         const form = e.target;
         const formData = new FormData(form);
-        console.log(formData);
 
         const { data } = await userAPI.update({
           userId: this.currentUser.id,
@@ -561,6 +584,13 @@ export default {
     this.fetchTweets(userId);
     this.fetchLikes(userId);
     next();
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
+    },
   },
 };
 </script>
@@ -777,14 +807,19 @@ export default {
 }
 
 .content-render {
-  max-height: 600px;
+  max-height: 650px;
   overflow-y: scroll;
+}
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
 }
 
 .card {
   border: 1px solid #e6ecf0;
   width: 100%;
   min-height: 144px;
+  padding: 0;
   display: flex;
   flex-direction: row;
   padding: 15px 0 0 13px;

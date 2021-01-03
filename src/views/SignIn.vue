@@ -88,19 +88,6 @@ export default {
           throw new Error(data.message);
         }
         localStorage.setItem("token", data.token);
-        // console.log(data.token);
-        // axios
-        //   .post("https://socket-go.herokuapp.com/api/login", {
-        //     account: this.account,
-        //     password: this.password,
-        //   })
-        //   .then((res) => {
-        //     localStorage.setItem("tokenNew", res.data.token);
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
-
         this.$store.commit("setCurrentUser", data.user);
 
         this.$router.push("/main");

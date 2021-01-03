@@ -156,7 +156,7 @@ export default {
 
 <style scoped>
 .followers-container {
-  width: 350px;
+  max-width: 350px;
   height: 517px;
   background: #f5f8fa;
   border-radius: 14px;

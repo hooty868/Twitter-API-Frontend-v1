@@ -243,7 +243,7 @@ export default {
   margin: 0 25px auto auto;
 }
 .main-content {
-  width: 600px;
+  max-width: 600px;
   padding: 0;
   border-left: 1px #e6ecf0 solid;
   border-right: 1px #e6ecf0 solid;
@@ -276,7 +276,7 @@ export default {
 }
 .form-group {
   margin: 0;
-  width: 510px;
+  max-width: 510px;
   height: 26px;
   margin: 21px auto auto 10px;
 }
