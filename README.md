@@ -4,7 +4,7 @@
 近期在新增：登入帳號密碼畫面，及驗證帳密功能
 
 ## 畫面截圖
-![首頁](https://upload.cc/i1/2020/12/17/miqWLI.png)
+![首頁](https://upload.cc/i1/2020/12/27/NEPWBU.png)
 
 ## Features - 產品功能
 
