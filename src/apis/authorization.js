@@ -1,0 +1,33 @@
+
+import { apiHelper } from './../utils/helpers'
+import { apiSocket } from './../utils/helpers'
+
+export default {
+  // 帶入需要的參數
+  signIn({ account, password }) {
+    // 這裡 return 的會是一個 Promise
+    return apiHelper.post('/login', {
+      account,
+      password
+    })
+  },
+  signUp({ account, name, email, password, checkPassword }) {
+    // 這裡 return 的會是一個 Promise
+    return apiHelper.post('/users', {
+      account,
+      name,
+      email,
+      password,
+      checkPassword
+    })
+  },
+
+  socketSignIn({ account, password }) {
+    // 這裡 return 的會是一個 Promise
+    return apiSocket.post('/login', {
+      account,
+      password
+    })
+  },
+
+}
