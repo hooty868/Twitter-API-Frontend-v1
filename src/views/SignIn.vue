@@ -2,11 +2,7 @@
   <div class="container py-5">
     <form class="form-group w-100" @submit.prevent.stop="handleSubmit">
       <div class="logo-container text-center">
-        <img
-          class="logo"
-          src="https://upload.cc/i1/2020/12/24/MLqwE5.png"
-          alt="Logo"
-        />
+        <LogoSVG />
       </div>
       <div class="brand-container text-center">
         <h1 class="brand h3">登入 Alphitter</h1>
@@ -56,10 +52,14 @@
 
 <script>
 import authorizationAPI from "./../apis/authorization";
+import LogoSVG from "./../components/logo_svg";
 import { Toast } from "./../utils/helpers";
 // import axios from "axios";
 
 export default {
+  components: {
+    LogoSVG,
+  },
   data() {
     return {
       account: "",
@@ -114,9 +114,11 @@ export default {
 </script>
 
 <style>
+/* css initial setting */
 .cursor-hand {
   cursor: pointer;
 }
+/* css main setting for components*/
 .form-group {
   max-width: 540px;
   margin: 0 auto 0 auto;
@@ -147,6 +149,16 @@ export default {
   position: relative;
   margin-bottom: 20px;
 }
+.form-label-group::after {
+  content: "";
+  width: 99%;
+  height: 2px;
+  background: #657786;
+  border-radius: 0px 0px 4px 4px;
+  position: absolute;
+  left: 0.5%;
+  transform: scale(1, 1);
+}
 .form-label-group:hover::after {
   content: "";
   width: 99%;
@@ -157,16 +169,6 @@ export default {
   left: 0.5%;
   transform: scale(0, 0);
   transition: transform 0.4s ease-out;
-}
-.form-label-group::after {
-  content: "";
-  width: 99%;
-  height: 2px;
-  background: #657786;
-  border-radius: 0px 0px 4px 4px;
-  position: absolute;
-  left: 0.5%;
-  transform: scale(1, 1);
 }
 .form-label-group label {
   position: absolute;
@@ -183,14 +185,14 @@ export default {
   border: none;
   background: #f5f8fa;
   border-radius: 4px;
-  width: 540px;
+  max-width: 540px;
   height: 50px;
   padding: 0;
   padding-top: 20px;
   padding-left: 10px;
 }
 .btn-submit {
-  width: 540px;
+  max-width: 540px;
   height: 50px;
   background: #ff6600;
   border-radius: 50px;
@@ -201,5 +203,10 @@ export default {
   font-size: 18px;
   line-height: 26px;
   margin-top: 30px;
+}
+@media (max-width: 400px) {
+  .container {
+    height: 700px;
+  }
 }
 </style>
