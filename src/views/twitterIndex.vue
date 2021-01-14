@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row h-100">
-      <div class="setting-pannel col-3 h-100">
+      <div class="setting-pannel col-3">
         <Navbar
           @after-create-twitter="afterCreateTwitter"
           :user-profile="UserProfile"
@@ -26,7 +26,10 @@
             >
               <img
                 class="profile-avater"
-                :src="UserProfile.User.avatar"
+                :src="
+                  UserProfile.User.avatar ||
+                  'https://upload.cc/i1/2021/01/07/Qp547R.png'
+                "
                 alt="avater"
               />
               <div class="card-content">
@@ -136,16 +139,16 @@
                     class="form-group"
                     @submit.stop.prevent="replytwitter(UserProfile.id)"
                   >
-                    <input
+                    <textarea
                       id="twitter"
-                      v-model="twitter"
-                      name="twitter"
-                      type="twitter"
                       class="twitter-input"
+                      v-model="Replytwitter"
+                      name="twitter"
                       autocomplete="twitter"
                       placeholder="推你的回覆"
+                      maxlength="140"
                       required
-                    />
+                    ></textarea>
                     <button
                       class="btn btn-lg btn-submit btn-block mb-3"
                       type="submit"
@@ -159,7 +162,7 @@
             </div>
           </div>
         </div>
-        <replyList :user-profile="UserProfile" :Twitters="twitters" />
+        <ReplyList :user-profile="UserProfile" :Twitters="twitters" />
       </div>
       <div class="main-follower col-4 h-100">
         <Followers :user-profile="UserProfile" :follower-list="followerlist" />
@@ -171,7 +174,7 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
-import replyList from "./../components/replyList";
+import ReplyList from "./../components/replyList";
 import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import followerAPI from "./../apis/followers";
@@ -186,7 +189,7 @@ export default {
     Spinner,
     Navbar,
     Followers,
-    replyList,
+    ReplyList,
   },
   created() {
     const { id } = this.$route.params;
@@ -318,7 +321,7 @@ export default {
           throw new Error(data.message);
         }
         this.repliedTwitter = {
-          id: Math.floor(Math.random() * 100000000) + 1,
+          id: Math.floor(Math.random() * 10000000) + 1,
           User: {
             id: this.UserProfile.id,
             account: this.UserProfile.account,
@@ -464,7 +467,7 @@ export default {
   margin: 0 25px auto auto;
 }
 .main-content {
-  width: 600px;
+  max-width: 600px;
   padding: 0;
   border-left: 1px #e6ecf0 solid;
   border-right: 1px #e6ecf0 solid;
@@ -491,18 +494,21 @@ export default {
   margin: 14px auto 15px 43px;
 }
 .twitter-bar {
-  height: 397px;
+  max-height: 40%;
   position: relative;
   border-bottom: 1px solid #e6ecf0;
 }
 .twitter-bar-container {
-  width: 570px;
-  margin: 0 auto 0 auto;
+  width: 100%;
+  margin: 0;
+}
+.twitter-bar-container .content-description {
+  margin-bottom: 30px;
 }
 .profile-avater {
   width: 50px;
   height: 50px;
-  margin: 10px 0 auto 0;
+  margin: 10px 0 auto 15px;
   border-radius: 50%;
 }
 .card-content {
@@ -532,22 +538,24 @@ export default {
   color: #657786;
 }
 .content-description .content-text {
-  width: 510px;
-  height: 136px;
-  margin: 15px auto 0 0;
+  max-width: 510px;
+  height: 100%;
+  margin: 15px auto 0 15px;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: 500;
   font-size: 23px;
   line-height: 34px;
   color: #1c1c1c;
+  word-wrap: break-word;
 }
 .reply-time {
   width: 192px;
   height: 22px;
-  margin: 15px auto 0 0;
+  margin: 20px auto 0 0;
 }
 .reply-time p {
+  margin-left: 15px;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: 500;
@@ -558,6 +566,7 @@ export default {
 .function-bar {
   height: 68px;
   margin: 15px auto 0 0;
+  padding-left: 15px;
   border-top: 1px solid #e6ecf0;
   border-bottom: 1px solid #e6ecf0;
 }
@@ -567,11 +576,12 @@ export default {
 }
 .icon-bar {
   height: 59px;
+  padding-left: 15px;
 }
 .icon-bar img {
   width: 25px;
   height: 25px;
-  margin: 21px 155px auto 0;
+  margin: 15px 155px auto 0;
 }
 .twitter-cards {
   max-height: 749px;
@@ -580,7 +590,7 @@ export default {
 }
 /* Modal  */
 .modal-content {
-  width: 600px;
+  max-width: 600px;
   height: 450px;
   background: #ffffff;
   border-radius: 14px;
@@ -608,19 +618,18 @@ export default {
   margin: 0px 10px auto 15px;
 }
 .content-bar .content-description {
-  width: 510px;
+  max-width: 510px;
   height: 123px;
   display: flex;
   flex-direction: column;
 }
 .content-description .description-head {
-  width: 510px;
+  max-width: 510px;
   height: 22px;
   display: flex;
 }
 .content-description .description-head .head-name {
   margin: 0;
-  /* margin-left: 5px; */
   height: 22px;
   font-family: Noto Sans TC;
   font-style: normal;
@@ -641,7 +650,7 @@ export default {
   color: #657786;
 }
 .content-description .description-content {
-  width: 510px;
+  max-width: 510px;
   height: 66px;
   margin: 5px auto 18px 0;
 }
@@ -683,6 +692,7 @@ export default {
   margin: 0;
 }
 .reply-bar {
+  height: 175px;
   display: flex;
   margin-top: 23px;
   position: relative;
@@ -697,6 +707,7 @@ export default {
   left: 39px;
 }
 .reply-bar .form-group {
+  width: 100%;
   margin: 0;
 }
 .reply-bar .reply-avater {
@@ -706,8 +717,8 @@ export default {
   margin: 0 10px auto 15px;
 }
 .reply-bar .twitter-input {
-  width: 510px;
-  height: 26px;
+  width: calc(100% - 15px);
+  height: 90%;
   border: none;
   margin-top: 12px;
 }
@@ -726,5 +737,70 @@ export default {
   font-size: 18px;
   line-height: 26px;
   color: white;
+}
+@media (max-width: 1410px) {
+  .main-content {
+    max-width: 480px;
+  }
+}
+@media (max-width: 1200px) {
+  .container .row {
+    all: unset;
+  }
+  .container .row {
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+      "setting content"
+      "follower  content";
+    grid-template-rows: 500px 1fr;
+    grid-template-columns: 45% 55%;
+  }
+  .setting-pannel {
+    max-width: 100%;
+    grid-area: setting;
+    height: 100%;
+  }
+  .main-content {
+    grid-area: content;
+    height: 100%;
+    max-width: 450px;
+  }
+  .main-follower {
+    grid-area: follower;
+    max-width: 100%;
+    padding: 0 15px 0 0;
+  }
+  .main-follower .followers-container {
+    margin: 15px 0 auto auto;
+  }
+  @media (max-width: 400px) {
+    .container .row {
+      all: initial;
+      max-width: 375px;
+    }
+    .row .setting-pannel {
+      height: 40px;
+      max-width: 375px;
+      border-left: 1px #e6ecf0 solid;
+      border-right: 1px #e6ecf0 solid;
+    }
+    .row .main-content {
+      height: 1px;
+      max-width: 375px;
+    }
+    .content-description .content-text {
+      margin: 0 0 0 15px;
+    }
+    .main-content .twitter-bar-container {
+      max-width: 375px;
+    }
+    .main-follower {
+      display: none;
+    }
+    .icon-bar .icon-img {
+      margin: 5% 50px 5% 0;
+    }
+  }
 }
 </style>
