@@ -179,6 +179,9 @@ export default {
   components: {
     Spinner,
   },
+  created() {
+    this.fetchUser();
+  },
   props: {
     navbarStatus: {
       type: String,
@@ -206,9 +209,6 @@ export default {
       isAuthenticated: false,
       status: "",
     };
-  },
-  created() {
-    this.fetchUser();
   },
   methods: {
     async fetchUser() {
