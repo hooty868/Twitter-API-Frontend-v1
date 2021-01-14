@@ -6,10 +6,7 @@
     <Spinner v-if="isLoading" />
     <div class="main-content" v-else>
       <div class="header"><p>帳戶設定</p></div>
-      <form
-        class="form-group w-100"
-        @submit.stop.prevent="handleSubmit(UserId)"
-      >
+      <form class="form-group" @submit.stop.prevent="handleSubmit(UserId)">
         <div class="form-label-group">
           <label for="account">帳號</label>
           <input
@@ -104,6 +101,10 @@ export default {
     Spinner,
     Navbar,
   },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchUserProfile(id);
+  },
   data() {
     return {
       isLoading: true,
@@ -118,10 +119,6 @@ export default {
       isProcessing: false,
       UserId: "",
     };
-  },
-  created() {
-    const { id } = this.$route.params;
-    this.fetchUserProfile(id);
   },
   methods: {
     async fetchUserProfile(userId) {
@@ -156,11 +153,12 @@ export default {
           password: this.userProfile.password,
           checkPassword: this.userProfile.checkPassword,
         });
-        console.log(response);
-        // if (data.status !== "success") {
-        //   throw new Error(data.message);
-        // }
-
+        if (response.status !== "success") {
+          Toast.fire({
+            icon: "info",
+            title: "已更新完使用者資訊，正在轉回主頁～",
+          });
+        }
         this.$router.push({ name: "main" });
       } catch (error) {
         this.isProcessing = false;
@@ -169,6 +167,13 @@ export default {
           title: "無法更新使用者資訊，請稍後再試",
         });
       }
+    },
+  },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.focus();
+      },
     },
   },
 };
@@ -206,9 +211,52 @@ export default {
 }
 .form-group {
   margin: 30px auto auto 16px;
+  width: 100%;
 }
 .btn-submit {
   width: 122px;
   margin: 30px 0px 0px auto;
+}
+@media (max-width: 1200px) {
+  .setting-pannel,
+  .main-content {
+    all: unset;
+  }
+  .setting-pannel {
+    flex-grow: 3;
+    height: 100%;
+    max-width: 235px;
+    padding: 0;
+    margin: 0;
+  }
+  .setting-pannel .navbar {
+    margin: 0;
+  }
+  .main-content {
+    flex-grow: 7;
+  }
+  .main-content .form-group {
+    width: calc(100% - 16px);
+  }
+}
+@media (max-width: 400px) {
+  .setting-pannel,
+  .main-content {
+    all: unset;
+  }
+  .container {
+    max-width: 100%;
+    flex-direction: column;
+  }
+  .setting-pannel {
+    max-width: 100%;
+    height: 7%;
+    padding: 0;
+    margin: 0;
+  }
+  .setting-pannel .navbar {
+    width: 100%;
+    margin: 0 0 0 15%;
+  }
 }
 </style>

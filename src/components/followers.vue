@@ -67,10 +67,6 @@ export default {
   created() {
     this.fetchUser();
   },
-  // updated() {
-  //   console.log("componemnt updated");
-  //   this.fetchUser();
-  // },
   watch: {
     followerList(newValue) {
       this.followers = newValue;
@@ -123,9 +119,6 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        // const NewResponse = await followerAPI.TopUsers();
-        // this.followers = NewResponse.data;
-        // this.isProcessing = true;
         this.followers = this.followers.map((follower) => {
           if (follower.followingId === followerId) {
             follower = {
@@ -200,11 +193,16 @@ export default {
   height: 50px;
   margin: auto 10px auto 15px;
   border-radius: 50%;
+  cursor: pointer;
+}
+.profile-avater:hover {
+  transform: scale(1.2);
 }
 .card-content {
   width: 79px;
   height: 33px;
   margin: auto 0 auto 0;
+  cursor: pointer;
 }
 .card-name {
   margin: 0;

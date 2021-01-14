@@ -1,41 +1,27 @@
 <template>
   <div class="container">
-    <div class="row h-100">
-      <div class="setting-pannel col-3 h-100">
+    <div class="row">
+      <div class="setting-pannel col-3">
         <Navbar
           @after-create-twitter="afterCreateTwitter"
           :navbar-status="status"
         />
       </div>
-      <div class="main-content col h-100">
+      <div class="main-content col-5 h-100">
         <div class="header"><p>首頁</p></div>
-        <div class="twitter-bar d-flex">
-          <img class="profile-avater" :src="UserProfile.avatar" alt="avater" />
-          <form class="form-group" @submit.stop.prevent="handleSubmit">
-            <input
-              id="twitter-main"
-              v-model="twitter"
-              name="twitter"
-              type="twitter"
-              class="twitter-input form-control"
-              autocomplete="twitter"
-              placeholder="有什麼新鮮事？"
-              required
-            />
-            <button class="btn btn-lg btn-submit btn-block mb-3" type="submit">
-              推文
-            </button>
-          </form>
-        </div>
+        <TwitterPost
+          :user-profile="UserProfile"
+          @after-create-twitter="afterCreateTwitter"
+        />
         <Spinner v-if="isLoading" />
-        <twitterList
+        <TwitterList
           :replied-twitter="repliedTwitter"
           :Twitters="twitters"
           :user-profile="UserProfile"
           v-else
         />
       </div>
-      <div class="main-follower col-4 h-100">
+      <div class="main-follower col-4">
         <Spinner v-if="isLoading" />
         <Followers
           :user-profile="UserProfile"
@@ -50,7 +36,8 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
-import twitterList from "./../components/twitterList";
+import TwitterList from "./../components/twitterList";
+import TwitterPost from "./../components/twitterPost";
 import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import userAPI from "./../apis/users";
@@ -63,7 +50,8 @@ export default {
     Spinner,
     Navbar,
     Followers,
-    twitterList,
+    TwitterList,
+    TwitterPost,
   },
   created() {
     this.fetchtwitterList();
@@ -148,46 +136,6 @@ export default {
           isliked: false,
           description: this.twitter,
         };
-        location.reload();
-      } catch (error) {
-        console.log("error", error);
-        Toast.fire({
-          icon: "warning",
-          title: error,
-        });
-      }
-      this.twitter = "";
-    },
-    async handleSubmit() {
-      try {
-        if (this.twitter.length > 140) {
-          throw new Error("字數不可以超過140個字");
-        } else if (this.twitter.length === 0) {
-          throw new Error("不可以輸入空白");
-        }
-        const response = await twitterAPI.postTwitter({
-          description: this.twitter,
-        });
-        const { data } = response;
-
-        if (data.status !== "success") {
-          throw new Error(data.message);
-        }
-        this.repliedTwitter = {
-          id: Math.floor(Math.random() * 100000000) + 1,
-          User: {
-            id: this.UserProfile.id,
-            account: this.UserProfile.account,
-            name: this.UserProfile.name,
-            avatar: this.UserProfile.avatar,
-          },
-          repliedCount: 0,
-          followedCount: 0,
-          createdAt: new Date(),
-          updatedAt: "",
-          isliked: false,
-          description: this.twitter,
-        };
       } catch (error) {
         console.log("error", error);
         Toast.fire({
@@ -234,16 +182,20 @@ export default {
 </script>
 
 <style scoped>
+/* grid layout css set */
 .container {
   max-width: 1440px;
   height: 1200px;
   margin: 0 auto 0 auto;
 }
+.container .row {
+  height: 100%;
+}
 .navbar {
   margin: 0 25px auto auto;
 }
 .main-content {
-  max-width: 600px;
+  width: 100%;
   padding: 0;
   border-left: 1px #e6ecf0 solid;
   border-right: 1px #e6ecf0 solid;
@@ -263,42 +215,60 @@ export default {
   padding-top: 15px;
   padding-left: 15px;
 }
-.twitter-bar {
-  height: 120px;
-  border-bottom: 10px #e6ecf0 solid;
-  position: relative;
+@media (max-width: 1410px) {
+  .main-content {
+    max-width: 480px;
+  }
 }
-.profile-avater {
-  width: 50px;
-  height: 50px;
-  margin: 10px auto auto 15px;
-  border-radius: 50%;
+@media (max-width: 1200px) {
+  .container .row {
+    all: unset;
+  }
+  .container .row {
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+      "setting content"
+      "follower  content";
+    grid-template-rows: 500px 1fr;
+    grid-template-columns: 45% 55%;
+  }
+  .setting-pannel {
+    max-width: 100%;
+    grid-area: setting;
+    height: 100%;
+  }
+  .main-content {
+    grid-area: content;
+    height: 100%;
+    max-width: 450px;
+  }
+  .main-follower {
+    grid-area: follower;
+    max-width: 100%;
+    padding: 0 15px 0 0;
+  }
+  .main-follower .followers-container {
+    margin: 15px 0 auto auto;
+  }
 }
-.form-group {
-  margin: 0;
-  max-width: 510px;
-  height: 26px;
-  margin: 21px auto auto 10px;
-}
-.twitter-input {
-  border: none;
-  background: none;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-}
-.btn-submit {
-  width: 64px;
-  height: 40px;
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 18px;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  top: 60px;
-  right: 15px;
+@media (max-width: 400px) {
+  .container .row {
+    all: initial;
+  }
+  .row .setting-pannel {
+    height: 1px;
+    max-width: 550px;
+  }
+  .row .main-content {
+    height: 1px;
+    max-width: 550px;
+  }
+  .main-content .twitter-bar-container {
+    max-width: 375px;
+  }
+  .main-follower {
+    display: none;
+  }
 }
 </style>

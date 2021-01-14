@@ -7,7 +7,9 @@
     >
       <img
         class="card-avater cursor-hand"
-        :src="twitter.User.avatar"
+        :src="
+          twitter.User.avatar || 'https://upload.cc/i1/2021/01/07/Qp547R.png'
+        "
         alt="avater"
         @click="profileLink(twitter.UserId)"
       />
@@ -92,7 +94,10 @@
             <div class="content-bar d-flex">
               <img
                 class="profile-avater"
-                :src="twitterDetail.User.avatar"
+                :src="
+                  twitterDetail.User.avatar ||
+                  'https://upload.cc/i1/2021/01/07/Qp547R.png'
+                "
                 alt="avater"
               />
               <div class="content-description">
@@ -122,24 +127,23 @@
                 :src="userprofile.avatar"
                 alt="avater"
               />
-              <form
-                class="form-group"
-                @submit.stop.prevent="replytwitter(twitterDetail.id)"
-              >
-                <input
+              <form class="form-group" @submit.stop.prevent="replytwitter">
+                <textarea
                   id="twitter"
+                  class="twitter-input"
                   v-model="Replytwitter"
                   name="twitter"
-                  type="twitter"
-                  class="twitter-input"
                   autocomplete="twitter"
                   placeholder="推你的回覆"
+                  maxlength="140"
                   required
-                />
+                ></textarea>
                 <button
                   class="btn btn-lg btn-submit btn-block mb-3"
                   type="submit"
                   block
+                  data-dismiss="modal"
+                  @click="replytwitter(twitterDetail.id)"
                 >
                   回覆
                 </button>
@@ -275,7 +279,7 @@ export default {
         if (data.status !== "success") {
           throw new Error(data.message);
         }
-        location.reload();
+        this.$router.push({ name: "twitterDetail", params: { id: twitterId } });
       } catch (error) {
         console.log("error", error);
         Toast.fire({
@@ -330,15 +334,22 @@ export default {
 .comments-card:hover {
   background: #f0f0f0;
 }
+.comments-card .card-content {
+  width: calc(100% - 75px);
+  height: auto;
+}
 .card-avater {
   width: 50px;
   height: 50px;
   margin: 13px 10px auto 15px;
   border-radius: 50%;
 }
+.card-avater:hover {
+  transform: scale(1.2);
+}
 .content-title {
-  width: 510px;
-  height: 22px;
+  width: 100%;
+  height: 30px;
 }
 .content-title p {
   margin: 10px 5px 6px 0;
@@ -368,16 +379,16 @@ export default {
   color: #657786;
 }
 .content-description {
-  width: 510px;
-  height: 107px;
+  max-width: 510px;
+  height: auto;
+  margin-bottom: 10px;
   position: relative;
 }
-.content-description p {
+.content-description .content-text {
+  height: auto;
   margin: 10px auto 14px 0;
-}
-.button-pannel {
-  position: absolute;
-  bottom: 13px;
+  padding-right: 5px;
+  word-wrap: break-word;
 }
 .icon-img {
   width: 12.34px;
@@ -421,7 +432,7 @@ export default {
 }
 /* Modal  */
 .modal-content {
-  width: 600px;
+  max-width: 600px;
   height: 450px;
   background: #ffffff;
   border-radius: 14px;
@@ -455,8 +466,8 @@ export default {
   flex-direction: column;
 }
 .content-description .description-head {
-  width: 510px;
-  height: 22px;
+  max-width: 510px;
+  height: auto;
   display: flex;
 }
 .content-description .description-head .head-name {
@@ -483,24 +494,25 @@ export default {
   color: #657786;
 }
 .content-description .description-content {
-  width: 510px;
+  max-width: 450px;
   height: 66px;
-  margin: 5px auto 18px 0;
+  margin: 5px 0px 18px 0;
 }
 .content-description .description-content p {
+  width: 100%;
+  margin: 0;
   font-family: Noto Sans TC;
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
   line-height: 22px;
   color: #1c1c1c;
-  margin: 0;
 }
 .content-description .description-footer {
   width: 90px;
   height: 13px;
   display: flex;
-  margin: 5px 0 0 0;
+  margin: 10px 0 0 0;
 }
 .content-description .description-footer .reply-for {
   width: 40px;
@@ -525,6 +537,7 @@ export default {
   margin: 0;
 }
 .reply-bar {
+  height: auto;
   display: flex;
   margin-top: 23px;
   position: relative;
@@ -540,6 +553,8 @@ export default {
 }
 .reply-bar .form-group {
   margin: 0;
+  width: 100%;
+  height: 145px;
 }
 .reply-bar .reply-avater {
   width: 50px;
@@ -548,10 +563,17 @@ export default {
   margin: 0 10px auto 15px;
 }
 .reply-bar .twitter-input {
-  width: 510px;
-  height: 26px;
+  width: 95%;
+  height: 100%;
   border: none;
   margin-top: 12px;
+}
+textarea {
+  resize: none;
+}
+::-webkit-scrollbar {
+  /*隱藏滾輪*/
+  display: none;
 }
 .twitter-bar .btn-submit {
   width: 64px;
