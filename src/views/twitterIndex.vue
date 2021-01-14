@@ -162,7 +162,7 @@
             </div>
           </div>
         </div>
-        <!-- <ReplyList :user-profile="UserProfile" :Twitters="twitters" /> -->
+        <ReplyList :user-profile="UserProfile" :Twitters="twitters" />
       </div>
       <div class="main-follower col-4 h-100">
         <Followers :user-profile="UserProfile" :follower-list="followerlist" />
@@ -174,7 +174,7 @@
 <script>
 import Navbar from "./../components/Navbar";
 import Followers from "./../components/followers";
-// import ReplyList from "./../components/replyList";
+import ReplyList from "./../components/replyList";
 import Spinner from "./../components/Spinner";
 import twitterAPI from "./../apis/twitter";
 import followerAPI from "./../apis/followers";
@@ -189,7 +189,7 @@ export default {
     Spinner,
     Navbar,
     Followers,
-    // ReplyList,
+    ReplyList,
   },
   created() {
     const { id } = this.$route.params;
