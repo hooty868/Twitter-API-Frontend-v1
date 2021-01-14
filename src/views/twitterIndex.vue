@@ -499,8 +499,8 @@ export default {
   border-bottom: 1px solid #e6ecf0;
 }
 .twitter-bar-container {
-  max-width: 570px;
-  margin: 0 auto 0 0;
+  width: 100%;
+  margin: 0;
 }
 .twitter-bar-container .content-description {
   margin-bottom: 30px;
