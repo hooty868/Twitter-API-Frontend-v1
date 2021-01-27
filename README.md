@@ -3,7 +3,7 @@
 並利用expressRouter，建立具有RESTful風格的後端API，打造Twitter社交網站，再加上搜尋/排序Twitter動態訊息等功能。
 
 ## 畫面截圖
-![首頁](https://upload.cc/i1/2020/12/17/miqWLI.png)
+![首頁](https://media.giphy.com/media/WHoRTHcpxYnyXrblcW/giphy.gif)
 
 ## Features - 產品功能
 
