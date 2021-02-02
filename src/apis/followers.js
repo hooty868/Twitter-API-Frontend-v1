@@ -1,20 +1,13 @@
 import { apiHelper } from './../utils/helpers'
-const getToken = () => localStorage.getItem('token')
 
 export default {
   TopUsers() {
-    return apiHelper.get(`/users/top`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/top`)
   },
   isFollower(userId) {
-    return apiHelper.post(`/followships`, { id: userId }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/followships`, { id: userId })
   },
   deletFollower(userId) {
-    return apiHelper.delete(`/followships/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/followships/${userId}`)
   },
 }

@@ -113,10 +113,7 @@ const socket = io("https://simple-twitter-2020.herokuapp.com/", {
 
 export default {
   components: {
-    // Spinner,
     Navbar,
-    // Followers,
-    // twitterList,
   },
   data() {
     return {

@@ -1,58 +1,36 @@
 import { apiHelper } from './../utils/helpers'
 import { apiSocket } from './../utils/helpers'
-const getToken = () => localStorage.getItem('token')
-
 
 export default {
   getUser(userId) {
-    return apiHelper.get(`/users/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}`)
   },
   getTweets(userId) {
-    return apiHelper.get(`/users/${userId}/tweets`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/tweets`)
   },
   getLikes(userId) {
-    return apiHelper.get(`/users/${userId}/likes`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/likes`)
   },
   getReply(userId) {
-    return apiHelper.get(`/users/${userId}/replied_tweets`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/replied_tweets`)
   },
   getFollower(userId) {
-    return apiHelper.get(`/users/${userId}/followers`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/followers`)
   },
   getFollowing(userId) {
-    return apiHelper.get(`/users/${userId}/followings`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/followings`)
   },
   addFollowing(followerId) {
-    return apiHelper.post(`/followships`, { id: followerId }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/followships`, { id: followerId })
   },
   deleteFollowing(followerId) {
-    return apiHelper.delete(`/followships/${followerId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/followships/${followerId}`)
   },
   update({ userId, formData }) {
-    return apiHelper.put(`/users/${userId}`, formData, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.put(`/users/${userId}`, formData)
   },
   socket() {
-    return apiSocket.get(`/`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiSocket.get(`/`)
   },
 
 }

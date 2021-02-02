@@ -142,7 +142,7 @@
                     <textarea
                       id="twitter"
                       class="twitter-input"
-                      v-model="Replytwitter"
+                      v-model="twitter"
                       name="twitter"
                       autocomplete="twitter"
                       placeholder="推你的回覆"
