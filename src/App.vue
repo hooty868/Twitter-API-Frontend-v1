@@ -1,5 +1,5 @@
 <template>
-  <div id="User-Profile">
+  <div id="twitter-project">
     <main role="main" class="bg-white">
       <router-view />
     </main>

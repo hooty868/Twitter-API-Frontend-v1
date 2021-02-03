@@ -229,14 +229,14 @@ export default {
     display: grid;
     grid-template-areas:
       "setting content"
-      "follower  content";
+      "follower content";
     grid-template-rows: 500px 1fr;
     grid-template-columns: 45% 55%;
   }
   .setting-pannel {
     max-width: 100%;
     grid-area: setting;
-    height: 100%;
+    height: 100vh;
   }
   .main-content {
     grid-area: content;

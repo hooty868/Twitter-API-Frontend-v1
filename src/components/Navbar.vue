@@ -255,7 +255,7 @@ export default {
 }
 /* css navbar setting */
 .navbar {
-  height: 100%;
+  height: 100vh;
   width: 235px;
   padding: 0;
   margin: 4px auto auto 103px;
@@ -408,7 +408,7 @@ textarea {
   }
   .logOut-contaier .pannel-icon {
     position: absolute;
-    top: 78px;
+    top: -588px;
     left: 230px;
     z-index: 1;
   }
